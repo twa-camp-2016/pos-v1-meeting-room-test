@@ -1,6 +1,217 @@
 'use strict';
+let main = require('../main/main');
+let {loadAllItems, loadPromotions} = require('./fixtures');
 
 describe('pos', () => {
+
+  it('#1.formatTags', () => {
+
+    let tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2'
+    ];
+
+    let formattedTags = main.formatTags(tags);
+
+    const expected = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+
+    expect(formattedTags).toEqual(expected);
+
+  });
+
+  it('#2.countBarcodes', () => {
+
+    let formattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    let countedBarcodes = main.countBarcodes(formattedTags);
+
+    const expected = [
+
+      {barcode: 'ITEM000001', count: 3},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    expect(countedBarcodes).toEqual(expected);
+
+  });
+  it('#3.buildCartItems', () => {
+    let countedBarcodes = [
+
+      {barcode: 'ITEM000001', count: 3},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    let allItems = loadAllItems();
+
+    let cartItems = main.buildCartItems(countedBarcodes, allItems);
+
+    const expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2
+      }
+    ];
+
+    expect(cartItems).toEqual(expected);
+
+  });
+
+  it('#4.buildPromotedItems', () => {
+    let cartItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2
+      }
+    ];
+    let promotions = loadPromotions();
+
+    let promotedItems = main.buildPromotedItems(cartItems, promotions);
+
+    const expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+    expect(promotedItems).toEqual(expected)
+  });
+
+  it('#5.calculateTotalPrices', () => {
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+
+    let totalPrices = main.calculateTotalPrices(promotedItems);
+
+    const expectTotalPrices =
+    {
+      totalPayPrice: 36,
+      totalSaved: 3
+    };
+
+    expect(totalPrices).toEqual(expectTotalPrices);
+
+  });
+
+
+  it('#6.buildReceipt', () => {
+
+    let totalPrices = {
+      totalPayPrice: 36,
+      totalSaved: 3
+    };
+
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+
+    let receipt = main.buildReceipt(promotedItems, totalPrices);
+
+    const expected = {
+      receiptItems: [
+        {
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00,
+          count: 3,
+          payPrice: 6
+        },
+        {
+          name: '荔枝',
+          unit: '斤',
+          price: 15.00,
+          count: 2,
+          payPrice: 30
+        }
+      ],
+      totalPayPrice: 36,
+      totalSaved: 3
+    };
+    expect(receipt).toEqual(expected);
+
+  });
+
 
   it('should print text', () => {
 
@@ -17,7 +228,7 @@ describe('pos', () => {
 
     spyOn(console, 'log');
 
-    printReceipt(tags);
+    main.printReceipt(tags);
 
     const expectText = `***<没钱赚商店>收据***
 名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
