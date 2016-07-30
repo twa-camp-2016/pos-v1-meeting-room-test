@@ -1,4 +1,8 @@
 'use strict';
+let{
+  loadAllItems,
+  loadPromotions
+}=require('../spec/fixtures.js');
 function getFormatTags(tags) {
   let result=[];
   for(let tag of tags){
@@ -15,6 +19,7 @@ function getFormatTags(tags) {
         });
      }
   }
+  return result;
 }
 function getExistItemsByArray(barcode,array){
  return  array.find((elemnet)=>elemnet.barcode===barcode);
@@ -98,12 +103,39 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved}){
     totalSaved
   }
 }
+function buildString(receipt){
+  let lines=[`***<没钱赚商店>收据***`];
+  let line;
+  for(let item of receipt.cartItems){
+    line= `名称：${item.name}，数量：${item.count}${item.unit}，单价：${(item.price).toFixed(2)}(元)，小计：${(item.payPrice).toFixed(2)}(元)`
+    lines.push(line);
+  }
+  lines.push('----------------------');
+  lines.push(`总计：${(receipt.totalPayPrice).toFixed(2)}(元)`);
+  lines.push(`节省：${(receipt.totalSaved).toFixed(2)}(元)`);
+  lines.push('**********************');
+   return lines.join('\n');
+}
+
+function printReceipt(tags){
+  let formattedTags=getFormatTags(tags);
+   let countedItems=getCountedItems(formattedTags);
+   let allItems=loadAllItems();
+  let  cartItems=buildCartItems(countedItems,allItems);
+  let promotions=loadPromotions();
+   let promotedItems=buildPromotionItems(cartItems,promotions);
+  let calculatedTotalPrice=calculateTotalPrice(promotedItems);
+  let receiptString= buildReceipt(promotedItems,calculatedTotalPrice);
+  console.log( buildString(receiptString));
+  // return  buildString(receiptString);
+}
+
 module.exports = {
   getFormatTags:getFormatTags,
   getCountedItems:getCountedItems,
   buildCartItems:buildCartItems,
   buildPromotionItems:buildPromotionItems,
   calculateTotalPrice:calculateTotalPrice,
-  buildReceipt:buildReceipt
-
+  buildReceipt:buildReceipt,
+  printReceipt:printReceipt
 };

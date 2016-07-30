@@ -1,0 +1,9 @@
+/**
+ * Created by zhuoyue on 16-7-30.
+ */
+var Jasmine = require('jasmine');
+var jasmine = new Jasmine();
+
+jasmine.loadConfigFile('spec/support/jasmine.json');
+
+jasmine.execute();
