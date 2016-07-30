@@ -1,8 +1,12 @@
 'use strict';
 let _ = require("lodash");
+let {loadAllItems,loadPromotions} = require("../spec/fixtures");
+
 function printReceipt(tags) {
   let formattedItems = formatedItem(tags);
   let countedBarcodes = countBarcode(formattedItems);
+  let allItems = loadAllItems();
+  let  cartItems = buildCartItems(countedBarcodes,allItems);
 
 
 }
@@ -22,9 +26,7 @@ function _getExistElementByItem(array, barcode) {
 }
 
 function countBarcode(formattedItems) {
-  // return _.map((formattedItems),formattedItem =>{
-  //       let {name,price} = _getExistElementByItem(formattedItem);
-  // });
+
   return _.reduce(formattedItems, (result, formattedItem) => {
     let found = _getExistElementByItem(result, formattedItem.barcode);
     if (found) {
@@ -35,9 +37,16 @@ function countBarcode(formattedItems) {
     return result;
   }, []);
 }
+function buildCartItems(countedBarcodes,allItems) {
+  return _.map((countedBarcodes), ({barcode,count})=>{
+        let {name,price,unit} = _getExistElementByItem(allItems,barcode);
+        return {name,price,unit,barcode,count}
+  });
+}
 
 module.exports = {
   printReceipt: printReceipt,
   formatedItem: formatedItem,
   countBarcode:countBarcode,
+  buildCartItems:buildCartItems,
 }

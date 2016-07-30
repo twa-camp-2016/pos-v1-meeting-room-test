@@ -2,8 +2,11 @@
 let {
   printReceipt,
   formatedItem,
-  countBarcode
+  countBarcode,
+  buildCartItems
 } = require("../main/main.js");
+let {loadAllItems,loadPromotions} = require("../spec/fixtures");
+
 describe('pos', () => {
   it('#1', () => {
     const tags = [
@@ -46,6 +49,21 @@ describe('pos', () => {
 
     expect(countedBarcodes).toEqual(expected);
   });
+
+  it('#3', () =>{
+    let countedBarcodes = [{barcode: 'ITEM000001', count: 5}, {barcode: 'ITEM000003', count: 2.5}, {barcode: 'ITEM000005', count: 3}];
+
+    let allItems = loadAllItems();
+    let  cartItems = buildCartItems(countedBarcodes,allItems);
+
+    let expected = [{barcode: 'ITEM000001', count: 5,name: '雪碧',unit: '瓶',price: 3.00 },
+                    {barcode: 'ITEM000003', count: 2.5,name: '荔枝',unit: '斤',price: 15.00},
+                    {barcode: 'ITEM000005', count: 3,name: '方便面',unit: '袋',price: 4.50}];
+
+    expect(cartItems).toEqual(expected);
+  });
+
+
 
 
   it('should print text', () => {
