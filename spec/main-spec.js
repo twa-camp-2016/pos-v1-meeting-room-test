@@ -1,5 +1,9 @@
 'use strict';
-let{getFormatTags}=require('../main/main');
+let{getFormatTags,
+   getCountedItems
+
+
+}=require('../main/main');
 describe('pos', () => {
   it('it should format tags', ()=> {
     const input = [
@@ -47,6 +51,58 @@ describe('pos', () => {
     ];
     let result = getFormatTags(input);
     expect(result).toEqual(result)
+  });
+
+
+  it('should  get Count Items',()=>{
+  let input=[
+    {
+      barcode: 'ITEM000001',
+      count:1
+    },
+    {
+      barcode: 'ITEM000001',
+      count:1
+    },
+    {
+      barcode: 'ITEM000001',
+      count:1
+    },
+    {
+      barcode: 'ITEM000001',
+      count:1
+    }, {
+      barcode: 'ITEM000001',
+      count:1
+    },
+    {
+      barcode: 'ITEM000003',
+      count: 2.5
+    },
+    {
+      barcode: 'ITEM000005',
+      count: 1
+    },
+    {
+      barcode: 'ITEM000005',
+      count: 2
+    }];
+    let expected=[
+      {
+        barcode: 'ITEM000001',
+        count:5
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 3
+      },
+     ];
+    let result=getCountedItems(input);
+    expect(result).toEqual(expected)
   });
 
   it('should print text', () => {

@@ -16,7 +16,26 @@ function getFormatTags(tags) {
      }
   }
 }
+function getExistItemsByArray(barcode,array){
+ return  array.find((elemnet)=>elemnet.barcode===barcode);
+}
+function  getCountedItems(formattedTags){
+  let result=[];
+  for(let formattedTag of formattedTags){
+    let found=getExistItemsByArray(formattedTag.barcode,result);
+     if(found){
+      found.count += formattedTag.count
+     }else {
+         result.push({
+         barcode: formattedTag.barcode,
+         count: formattedTag.count
+       });
+     }
+  }
+  return result;
+}
 
 module.exports = {
-  getFormatTags:getFormatTags
+  getFormatTags:getFormatTags,
+  getCountedItems:getCountedItems
 };
