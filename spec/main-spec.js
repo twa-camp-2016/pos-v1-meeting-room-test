@@ -38,12 +38,39 @@ describe('pos', () => {
     expect(formattedTags).toEqual(expected);
   })
 
-  it('#2| count the tags',()=>{
+  fit('#2| count the tags',()=>{
     const formattedTags = [
       {
-        barcode:
+        barcode:'ITEM000001',
+        count:1
+      },
+      {
+        barcode:'ITEM000001',
+        count:1
+      },
+      {
+        barcode:'ITEM000003',
+        count:2.5
+      },
+      {
+        barcode:'ITEM000001',
+        count:1
+      }
+
+    ]
+    let countedBarcodes = countBarcodes(formattedTags);
+    let expected = [
+      {
+        barcode:'ITEM000001',
+        count:3
+      },
+      {
+        barcode:'ITEM000003',
+        count:2.5
       }
     ]
+
+    expect(countedBarcodes).toEqual(expected);
   })
 
   it('should print text', () => {

@@ -14,7 +14,20 @@ function formatTags(tags) {
   })
 }
 
-function countBarcodes(formatedTags) {
+function _getExistElement(array, barcode) {
+  return array.find((item)=> {return item.barcode === barcode});
+}
+
+function countBarcodes(formattedTags) {
+  return formattedTags.reduce((result,formattedTag)=>{
+    let found = _getExistElement(result,formattedTag.barcode);
+    if(found){
+      found.count+=formattedTag.count;
+    }else {
+      result.push({barcode:formattedTag.barcode,count:formattedTag.count});
+    }
+    return result;
+  },[])
 
 }
 module.exports = {
