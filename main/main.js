@@ -1,7 +1,20 @@
 'use strict';
+let _ = require('lodash');
+function printReceipt(barcode) {
 
-//TODO: 请在该文件中实现练习要求并删除此注释
-
-module.exports = {
-  
 }
+function formatBarcode(tags) {
+  let tagArray = [];
+  return _.chain(tags).map(tag=> {
+    if (tag.includes('-')) {
+      tagArray = tag.split('-');
+      return {barcode: tagArray[0], count: parseFloat(tagArray[1])}
+    } else {
+      return {barcode:tag,count:1};
+    }
+  })
+    .value();
+}
+module.exports = {
+  formatBarcode: formatBarcode,
+};

@@ -1,7 +1,32 @@
 'use strict';
+let {formatBarcode} = require('../main/main');
 
 describe('pos', () => {
+  it('for mat tags',()=>{
+    let tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+    let formattedBarcode = formatBarcode(tags);
+    let expected = [
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:1},
+      {barcode:'ITEM000005',count:2},
 
+    ];
+    expect(formattedBarcode).toEqual(expected);
+  });
   it('should print text', () => {
 
     const tags = [
