@@ -1,6 +1,50 @@
 'use strict';
-
+let {formatTags,countBarcodes,printReceipt} = require('../main/main');
 describe('pos', () => {
+
+  it('#1| format the tags',()=>{
+    const tags =[
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ]
+
+    const formattedTags = formatTags(tags);
+    const expected = [
+      {
+        barcode:'ITEM000001',
+        count:1
+      },
+      {
+        barcode:'ITEM000001',
+        count:1
+      },
+      {
+        barcode:'ITEM000003',
+        count:2.5
+      },
+      {
+        barcode:'ITEM000005',
+        count:1
+      },
+      {
+        barcode:'ITEM000005',
+        count:2
+      }
+    ]
+
+    expect(formattedTags).toEqual(expected);
+  })
+
+  it('#2| count the tags',()=>{
+    const formattedTags = [
+      {
+        barcode:
+      }
+    ]
+  })
 
   it('should print text', () => {
 
