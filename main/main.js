@@ -40,7 +40,9 @@ function buildCartItems(countedItems,allItems) {
     }
   })
 }
-
+function _fixPrice(number) {
+  return parseFloat(number.toFixed(2));
+}
 function buildPromotedItems(cartItems,promotions) {
   let currentionPromotion=promotions.find((promotion)=>promotion.type==='BUY_TWO_GET_ONE_FREE');
   return cartItems.map((cartItem)=>{
@@ -52,7 +54,7 @@ function buildPromotedItems(cartItems,promotions) {
       saved=savedCount*cartItem.price;
     }
     let payPrice=totalPrice-saved;
-    return Object.assign({},cartItem,{payPrice,saved});
+    return Object.assign({},cartItem,{payPrice:_fixPrice(payPrice),saved:_fixPrice(saved)});
 
   })
 }
@@ -65,15 +67,29 @@ function calculateTotalPrices(promotedItems) {
 }
 
 function buildReceipt(promotedItems,totalPrices) {
-  let promotedItem=promotedItems.map(({name,unit,price,count})=>{
-    return {name,unit,price,count};
+  let promotedItem=promotedItems.map(({name,unit,price,count,payPrice})=>{
+    return {name,unit,price:price,count,payPrice};
   });
 
   return {
     promotedItem,
-    totalPayPrice:totalPrices.totalPayPrice,
-    totalSavd:totalPrices.totalSaved
+    totalPayPrice:_fixPrice(totalPrices.totalPayPrice),
+    totalSaved:_fixPrice(totalPrices.totalSaved)
   }
+}
+function buildReceiptString(receipt) {
+  let lines=['***<没钱赚商店>收据***'];
+  for(let {name,count,unit,price,payPrice} of receipt.promotedItem){
+    let line=`名称：${name}，数量：${count}${unit}，单价：${price.toFixed(2)}(元)，小计：${payPrice.toFixed(2)}(元)`;
+    lines.push(line);
+  }
+  lines.push('----------------------');
+  lines.push(`总计：${receipt.totalPayPrice.toFixed(2)}(元)`);
+  lines.push(`节省：${receipt.totalSaved.toFixed(2)}(元)`);
+  lines.push('**********************');
+  // let receiptString=lines.join('\n');
+  return lines.join('\n');
+
 }
 function printReceipt(tags) {
   let formattedTags=getFormattedTags(tags);
@@ -89,7 +105,9 @@ function printReceipt(tags) {
   let totalPrices=calculateTotalPrices(promotedItems);
   // console.log(totalPrices);
   let receipt=buildReceipt(promotedItems,totalPrices);
-  console.log(receipt);
+  // console.log(receipt);
+  let receiptString=buildReceiptString(receipt);
+  console.log(receiptString);
 }
 let tags = [
   'ITEM000001',
@@ -168,5 +186,7 @@ module.exports = {
   loadPromotions:loadPromotions,
   buildPromotedItems:buildPromotedItems,
   calculateTotalPrices:calculateTotalPrices,
-  buildReceipt:buildReceipt
+  buildReceipt:buildReceipt,
+  buildReceiptString:buildReceiptString,
+  printReceipt:printReceipt
 }
