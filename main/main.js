@@ -77,22 +77,34 @@ function calulateTotalPrice(promotionItems) {
   }, {totalPrice: 0, totalSaved: 0})
 }
 
-function buildReceipt(promotedItems,{totalPrice,totalSaved}) {
+function buildReceipt(promotedItems, {totalPrice, totalSaved}) {
   return {
-    items:promotedItems,
+    items: promotedItems,
     totalPrice,
     totalSaved
   }
 }
 
-
+function buildReceiptSting({items, totalPrice, totalSaved}) {
+  let lines = ['***<没钱赚商店>收据***'];
+  for (let {name, unit, price, count, payPrice} of items) {
+    let line = `名称：${name}，数量：${count}${unit}，单价：${price.toFixed(2)}(元)，小计：${payPrice.toFixed(2)}(元)`;
+    lines.push(line)
+  }
+  lines.push('----------------------');
+  lines.push(`总计：${totalPrice.toFixed(2)}(元)`);
+  lines.push(`节省：${totalSaved.toFixed(2)}(元)`);
+  lines.push('**********************');
+  return lines.join('\n');
+}
 
 module.exports = {
   getFormatedTags: getFormatedTags,
   getCountTags: getCountTags,
   getCartItems: getCartItems,
   getPromotionItems: getPromotionItems,
-  calulateTotalPrice:calulateTotalPrice,
-  buildReceipt:buildReceipt
+  calulateTotalPrice: calulateTotalPrice,
+  buildReceipt: buildReceipt,
+  buildReceiptSting
 }
 
