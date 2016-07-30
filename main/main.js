@@ -9,6 +9,7 @@ function printReceipt(tags) {
   let promotions = loadPromotions();
   let promotedItems = buildPromotedItems(cartItems,promotions);
   let totalPrices = calculateTotalPrices(promotedItems);
+  let receiptModel = buildReceipt(promotedItems, totalPrices);
 }
 function getFormattedItems(tags) {
   return tags.map((tag) => {
@@ -56,11 +57,21 @@ function calculateTotalPrices(promotedItems){
   return {totalPayPrice: _.sumBy(promotedItems,'payPrice'),
     totalSaved: _.sumBy(promotedItems,'saved')}
 }
+function buildReceipt(promotedItems,totalPrices) {
+  return {
+    promotedItems: promotedItems.map(({name,unit,price,count,payPrice}) => {
+      return {name,unit,price,count,payPrice}
+    }),
+    totalPayPrice:totalPrices.totalPayPrice,
+    totalSaved:totalPrices.totalSaved
+  }
+}
 module.exports = {
   printReceipt,
   getFormattedItems,
   getCountBarcodes,
   buildCartItems,
   buildPromotedItems,
-  calculateTotalPrices
+  calculateTotalPrices,
+  buildReceipt
 }
