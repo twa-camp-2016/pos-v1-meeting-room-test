@@ -1,5 +1,6 @@
 'use strict';
-let {loadAllItems,loadPromotions} = require('../spec/fixtures')
+let {loadAllItems,loadPromotions} = require('../spec/fixtures');
+let _ = require('lodash');
 function printReceipt(tags) {
   let formattedItems = getFormattedItems(tags);
   let countBarcode = getCountBarcodes(formattedItems);
@@ -7,6 +8,7 @@ function printReceipt(tags) {
   let cartItems = buildCartItems(countBarcode,allItems);
   let promotions = loadPromotions();
   let promotedItems = buildPromotedItems(cartItems,promotions);
+  let totalPrices = calculateTotalPrices(promotedItems);
 }
 function getFormattedItems(tags) {
   return tags.map((tag) => {
@@ -50,10 +52,15 @@ function buildPromotedItems(cartItems,promotions) {
     return Object.assign({},cartItem,{payPrice,saved})
   })
 }
+function calculateTotalPrices(promotedItems){
+  return {totalPayPrice: _.sumBy(promotedItems,'payPrice'),
+    totalSaved: _.sumBy(promotedItems,'saved')}
+}
 module.exports = {
   printReceipt,
   getFormattedItems,
   getCountBarcodes,
   buildCartItems,
-  buildPromotedItems
+  buildPromotedItems,
+  calculateTotalPrices
 }

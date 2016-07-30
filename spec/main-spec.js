@@ -1,6 +1,6 @@
 'use strict';
-let {getFormattedItems,getCountBarcodes,buildCartItems, buildPromotedItems,printReceipt} = require('../main/main');
-let {loadAllItems,loadPromotions} = require('./fixtures')
+let {getFormattedItems, getCountBarcodes, buildCartItems, buildPromotedItems, calculateTotalPrices,printReceipt} = require('../main/main');
+let {loadAllItems, loadPromotions} = require('./fixtures')
 describe('pos', () => {
   it('getFormattedItems', () => {
     let tags = [
@@ -21,7 +21,7 @@ describe('pos', () => {
     expect(formattedItems).toEqual(expected);
   });
   it('getCountBarcode', () => {
-    let formattedItems =[
+    let formattedItems = [
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000003', count: 2.5},
@@ -43,7 +43,7 @@ describe('pos', () => {
       {barcode: 'ITEM000005', count: 3}
     ]
     let allItems = loadAllItems();
-    let cartItems = buildCartItems(countBarcodes,allItems);
+    let cartItems = buildCartItems(countBarcodes, allItems);
     let expected = [
       {
         barcode: 'ITEM000001',
@@ -94,7 +94,7 @@ describe('pos', () => {
       }
     ]
     let promotions = loadPromotions();
-    let promotedItems = buildPromotedItems(cartItems,promotions);
+    let promotedItems = buildPromotedItems(cartItems, promotions);
     let excepted = [
       {
         barcode: 'ITEM000001',
@@ -125,6 +125,43 @@ describe('pos', () => {
       }
     ]
     expect(promotedItems).toEqual(excepted);
+  })
+  it('calculateTotaoPrice', () => {
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 2,
+        payPrice: 6,
+        saved: 0
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5,
+        payPrice: 37.5,
+        saved: 0
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3,
+        payPrice: 9,
+        saved: 4.5
+      }
+    ]
+    let totalPrices = calculateTotalPrices(promotedItems);
+    let expected = {
+      totalPayPrice:52.5,
+      totalSaved:4.5
+    }
+    expect(totalPrices).toEqual(expected);
   })
 
   it('should print text', () => {
