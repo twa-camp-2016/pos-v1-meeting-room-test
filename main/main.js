@@ -5,6 +5,8 @@ function printReceipt(tags) {
   let countBarcode = getCountBarcodes(formattedItems);
   let allItems = loadAllItems();
   let cartItems = buildCartItems(countBarcode,allItems);
+  let promotions = loadPromotions();
+  let promotedItems = buildPromotedItems(cartItems,promotions);
 }
 function getFormattedItems(tags) {
   return tags.map((tag) => {
@@ -36,9 +38,22 @@ function buildCartItems(countBarcodes,allItems) {
     return {barcode,name,unit,price,count};
   })
 }
+
+function buildPromotedItems(cartItems,promotions) {
+  // let currentPromotion = promotions.find((promotion) => promotion.type ==='BUY_TWO_GET_ONE_FREE');
+  let currentPromotion = promotions.find((promotion) => promotion.type === 'BUY_TWO_GET_ONE_FREE');
+  return cartItems.map((cartItem) => {
+    let hasPromoted = currentPromotion.barcodes.includes(cartItem.barcode);
+    let saved = hasPromoted ?  Math.floor(cartItem.count / 3)*cartItem.price : 0;
+    let payPrice = cartItem.count*cartItem.price - saved;
+    
+    return Object.assign({},cartItem,{payPrice,saved})
+  })
+}
 module.exports = {
   printReceipt,
   getFormattedItems,
   getCountBarcodes,
-  buildCartItems
+  buildCartItems,
+  buildPromotedItems
 }

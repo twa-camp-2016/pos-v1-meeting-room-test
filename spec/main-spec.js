@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedItems,getCountBarcodes,buildCartItems, printReceipt} = require('../main/main');
+let {getFormattedItems,getCountBarcodes,buildCartItems, buildPromotedItems,printReceipt} = require('../main/main');
 let {loadAllItems,loadPromotions} = require('./fixtures')
 describe('pos', () => {
   it('getFormattedItems', () => {
@@ -68,6 +68,63 @@ describe('pos', () => {
       }
     ]
     expect(cartItems).toEqual(expected);
+  });
+  it('buildPromotions', () => {
+    let cartItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 2
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3
+      }
+    ]
+    let promotions = loadPromotions();
+    let promotedItems = buildPromotedItems(cartItems,promotions);
+    let excepted = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 2,
+        payPrice: 6,
+        saved: 0
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5,
+        payPrice: 37.5,
+        saved: 0
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3,
+        payPrice: 9,
+        saved: 4.5
+      }
+    ]
+    expect(promotedItems).toEqual(excepted);
   })
 
   it('should print text', () => {
