@@ -10,6 +10,9 @@ function printReceipt(tags) {
   let promotedItems = buildPromotions(cartItems,promotions);
   let totalPrices = calculateTotalPrices(promotedItems);
   let receipt = buildReceipt(promotedItems,totalPrices);
+  let receiptString = buildReceiptString(receipt);
+  console.log(receiptString);
+
 }
 
 function formatTags(tags) {
@@ -98,6 +101,22 @@ function buildReceipt(promotedItems, {totalPayPrice,totalSaved}) {
   }
 }
 
+function buildReceiptString(receipt) {
+  let lines = [`***<没钱赚商店>收据***`];
+  let line ="";
+  for(let {name,unit,price,count,payPrice} of receipt.receiptItems){
+      line = `名称：${name}，数量：${count}${unit}，单价：${price.toFixed(2)}(元)，小计：${payPrice.toFixed(2)}(元)`;
+      lines.push(line);
+  }
+  lines.push(`----------------------`);
+  lines.push(`总计：${receipt.totalPayPrice.toFixed(2)}(元)`);
+  lines.push(`节省：${receipt.totalSaved.toFixed(2)}(元)`);
+  lines.push(`**********************`);
+
+  let receiptString = lines.join("\n");
+  return receiptString;
+}
+
 module.exports = {
   formatTags,
   countBarcodes,
@@ -105,5 +124,6 @@ module.exports = {
   buildPromotions,
   calculateTotalPrices,
   buildReceipt,
+  buildReceiptString,
   printReceipt
 }
