@@ -1,4 +1,33 @@
 'use strict';
+let {getFormattedTags}=require('../main/main.js');
+
+describe('pos', () => {
+  fit('should get formatted tags', () => {
+    const tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+
+    let result = getFormattedTags(tags);
+
+    const expected = [ { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000003', count: 2.5 },
+      { barcode: 'ITEM000005', count: 1 },
+      { barcode: 'ITEM000005', count: 2 } ];
+
+    expect(result).toEqual(expected);
+  });
+});
 
 describe('pos', () => {
 
