@@ -1,5 +1,6 @@
 'use strict';
 let {printReceipt,buildCartItems, buildReceiptItems,buildReceipt} = require('../main/main.js');
+
 describe('pos', () => {
 
   it('统计商品信息', () => {
@@ -57,7 +58,7 @@ describe('pos', () => {
           price: 4.50
         }, count: 2
       }, subtotal: 9,
-        saved:0
+        saved:4.5
     }];
     const expectResult = buildReceiptItems(input, promotions);
 
