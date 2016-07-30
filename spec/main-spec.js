@@ -1,5 +1,6 @@
 'use strict';
-let {getFormattedTags, getCountBarcodes, buildCartItems, loadAllItems, loadPromotions, buildPromotedItems}=require('../main/main.js');
+let {getFormattedTags, getCountBarcodes, buildCartItems, loadAllItems,
+  loadPromotions, buildPromotedItems, calculateTotalPrices}=require('../main/main.js');
 //let {loadAllItems}=require('../spec/fixtures.js');
 describe('pos', () => {
   fit('should get formatted tags', () => {
@@ -79,6 +80,19 @@ describe('pos', () => {
       { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
       { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5, payPrice: 37.50, saved: 0.00  },
       { barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.5, count: 3, payPrice: 9.00, saved: 4.50  } ];
+
+    expect(result).toEqual(expected);
+  });
+
+  fit("should calculateTotalPrices", () => {
+    const promotedItems = [
+      { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
+      { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5, payPrice: 37.50, saved: 0.00  },
+      { barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.5, count: 3, payPrice: 9.00, saved: 4.50  } ];
+
+    let result = calculateTotalPrices(promotedItems);
+
+    const expected = { totalPayPrice: 58.5, totalSaved: 7.5 };
 
     expect(result).toEqual(expected);
   });

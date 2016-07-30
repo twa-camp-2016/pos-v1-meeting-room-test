@@ -101,10 +101,13 @@ function buildPromotedItems(cartItems, promotions) {
   });
 }
 
-let formattedTags = getFormattedTags(tags);
-let countedBarcodes = getCountBarcodes(formattedTags);
-let allItems = loadAllItems();
-buildCartItems(countedBarcodes, allItems);
+function calculateTotalPrices(promotedItems) {
+  return _.reduce(promotedItems, (result, {payPrice, saved})=> {
+    result.totalPayPrice += payPrice;
+    result.totalSaved += saved;
+    return result;
+  }, {totalPayPrice: 0, totalSaved: 0});
+}
 
 module.exports = {
   getFormattedTags: getFormattedTags,
@@ -112,5 +115,6 @@ module.exports = {
   buildCartItems: buildCartItems,
   loadAllItems: loadAllItems,
   loadPromotions: loadPromotions,
-  buildPromotedItems: buildPromotedItems
+  buildPromotedItems: buildPromotedItems,
+  calculateTotalPrices: calculateTotalPrices
 };
