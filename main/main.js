@@ -72,12 +72,12 @@ function printReceipt(tags){
   let cartItems = getCartItems(countedTags, allItems);
   //console.log(cartItems);
   let promoteItems = getPromoteItems(cartItems, promotionItems);
-  console.log(promoteItems);
-  let totalPrices = getTotalPrices(promoteItems);
-  console.log(totalPrices);
- // let receipt=getReceiptItems(promotedItems, totalPrices);
- // console.log(receipt);
-//  let receiptString=buildReceiptString(receiptModel);
+//  console.log(promoteItems);
+  let totalPrices = getTotalPrices(promoteItems );
+ // console.log(totalPrices);
+  let receipt=getReceiptItems(promoteItems, totalPrices);
+  console.log(receipt);
+  let receiptString=buildReceiptString(receipt);
  // console.log(receiptString);
 }
 printReceipt(tags);
@@ -125,53 +125,48 @@ function getPromoteItems(cartItems, promotionItems) {
     let payPrice = 0;
     let saved = 0;
     if (hasPromoted) {
-      var savedCount = Math.floor(item.count / 3);
+      let savedCount = Math.floor(item.count / 3);
       saved = item.price * savedCount;
       payPrice = item.count * item.price - saved;
     }
-    let result = [];
-    result.push({
+    return {
       barcode: item.barcode,
       name: item.name,
       unit: item.unit,
       price: item.price,
       count: item.count,
       payPrice,
-      saved
-    });
-    return result;
+      saved}
   });
-
 }
 function getTotalPrices(promoteItems) {
   return promoteItems.reduce(((result,{payPrice,saved})=>{
-    console.log(payPrice);
     result.totalPay+=payPrice;
     result.totalSaved+=saved;
     return result;
   }),{totalPay:0,totalSaved:0});
 
-}function getReceiptItems(promotedItems, totalPrices) {
+}function getReceiptItems(promotionItems, totalPrices) {
     return {
       promotionItems,
       totalPay:totalPrices.totalPay,
       totalSaved: totalPrices.totalSaved
     }
 }
-function buildReceiptString(receiptModel) {
-  let totalPayPrice = receiptModel.totalPayPrice;
-  let saved = receiptModel.totalSaved;
+function buildReceiptString(receipt) {
+  let totalPay = receipt.totalPay;
+  let saved = receipt.totalSaved;
   let receiptItemsString = "";
   let payPrice;
-  for (let receiptItem of receiptModel.receiptItems) {
+  for (let receiptItem of receipt.promotionItems) {
 
     receiptItemsString += `名称：${receiptItem.name},数量：${receiptItem.count}${receiptItem.unit},单价：${receiptItem.price.toFixed(2)}(元)，小计：${receiptItem.payPrice.toFixed(2)}(元)`;
     receiptItemsString += "\n";
 
   }
-  const result = `****<没赚钱商店>***
+  const result = `****<没赚钱商店>收据***
 ${receiptItemsString}----------------------
-总计:${totalPayPrice.toFixed(2)}(元)
+总计:${totalPay.toFixed(2)}(元)
 节省:${saved.toFixed(2)}(元)
 **********************`;
   return result;
