@@ -1,4 +1,24 @@
 'use strict';
+let {getFormatedTags} = require('../main/main');
+
+describe('pos unit',()=>{
+  it('getFormatedTags',()=>{
+    let tags = [
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2'
+    ];
+    let formatedTags =[
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:1},
+      {barcode:'ITEM000005',count:2}
+    ];
+    let result = getFormatedTags(tags);
+    expect(formatedTags).toEqual(result);
+  });
+})
+
+
 
 describe('pos', () => {
 
