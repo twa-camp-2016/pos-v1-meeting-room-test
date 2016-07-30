@@ -23,6 +23,8 @@ function getFormatedTags(tags) {
   });
 }
 
+
+
 module.exports = {
   getFormatedTags
 }
