@@ -40,6 +40,22 @@ function buildCartItems(countedItems,allItems) {
     }
   })
 }
+
+function buildPromotedItems(cartItems,promotions) {
+  let currentionPromotion=promotions.find((promotion)=>promotion.type==='BUY_TWO_GET_ONE_FREE');
+  return cartItems.map((cartItem)=>{
+    let totalPrice=cartItem.count*cartItem.price;
+    let hasPromoted=currentionPromotion.barcodes.includes(cartItem.barcode);
+    let saved=0;
+    if(hasPromoted&&cartItem.count>=2){
+      let savedCount=Math.floor(cartItem.count/3);
+      saved=savedCount*cartItem.price;
+    }
+    let payPrice=totalPrice-saved;
+    return Object.assign({},cartItem,{payPrice,saved});
+
+  })
+}
 function printReceipt(tags) {
   let formattedTags=getFormattedTags(tags);
   // console.log(formattedTags);
@@ -47,15 +63,27 @@ function printReceipt(tags) {
   // console.log(countedItems);
   let allItems=loadAllItems();
   let cartItems=buildCartItems(countedItems,allItems);
-  console.log(cartItems);
+  // console.log(cartItems);
+  let promotions=loadPromotions();
+  let promotedItems=buildPromotedItems(cartItems,promotions);
+  console.log(promotedItems);
 }
 let tags = [
   'ITEM000001',
   'ITEM000001',
-  'ITEM000003-2.5',
-  'ITEM000005',
+  'ITEM000001-2',
+  'ITEM000001-2',
+  'ITEM000003-3.5',
   'ITEM000005-2'
 ];
+
+// let tags = [
+//   'ITEM000001',
+//   'ITEM000001',
+//   'ITEM000003-2.5',
+//   'ITEM000005',
+//   'ITEM000005-2'
+// ];
 function loadAllItems() {
   return [
     {
@@ -96,10 +124,24 @@ function loadAllItems() {
     }
   ];
 }
+function loadPromotions() {
+  return [
+    {
+      type: 'BUY_TWO_GET_ONE_FREE',
+      barcodes: [
+        'ITEM000000',
+        'ITEM000001',
+        'ITEM000005'
+      ]
+    }
+  ];
+}
 printReceipt(tags);
 module.exports = {
   getFormattedTags:getFormattedTags,
   getCountedItems:getCountedItems,
   loadAllItems:loadAllItems,
-  buildCartItems:buildCartItems
+  buildCartItems:buildCartItems,
+  loadPromotions:loadPromotions,
+  buildPromotedItems:buildPromotedItems
 }
