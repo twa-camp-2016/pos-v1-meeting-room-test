@@ -29,7 +29,6 @@ describe('pos', () => {
     ];
     let formattedTags = formatTags(tags);
     expect(formattedTags).toEqual(expected);
-
   });
 
   it('should print text', () => {
