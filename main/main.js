@@ -1,6 +1,7 @@
 'use strict';
 
 let _ = require('lodash');
+let fixtures = require('../spec/fixtures')
 
 function getElementByBarcode(array,barcode){
   return array.find((element) => element.barcode === barcode);
@@ -101,12 +102,47 @@ function buildReceipt(promotedCartsInfo,totalPrices){
   return result;
 }
 
+function buildReceiptString(receipt){
+  let totalPayPrice = receipt.totalPayPrice;
+  let totalSaved = receipt.totalSaved;
+
+  let receiptString = '';
+
+  for(let cartReceipt of receipt.receiptItem){
+    receiptString += `名称：${cartReceipt.name},数量:${cartReceipt.count}${cartReceipt.unit},单价：${cartReceipt.price.toFixed(2)}(元),小计：${cartReceipt.totalPayPrice.toFixed(2)}(元)`;
+    receiptString +='\n';
+  }
+  const result = `***<没钱赚商店>收据***
+${receiptString}----------------------
+总计：${totalPayPrice.toFixed(2)}(元)
+节省：${totalSaved.toFixed(2)}(元)
+**********************`;
+  console.log(result);
+  return result;
+}
+
+function printReceipt(receiptString) {
+  let allItems = fixtures.loadAllItems();
+  let promotions = fixtures.loadPromotions();
+  let formatedTags = getFormatedTags(receiptString);
+  let countedBarcodes = countBarcodes(formatedTags);
+  let cartItems = buildCartItems(countedBarcodes, allItems);
+  let promotedCarts = getPromotedCartInfo(cartItems, promotions);
+  let totalPrices = calculateTotalPrice(promotedCarts);
+  let receipt = buildReceipt(promotedCarts, totalPrices);
+  let receiptStr = buildReceiptString(receipt);
+
+  console.log(receiptStr);
+}
+
 module.exports = {
   getFormatedTags,
   countBarcodes,
   buildCartItems,
   getPromotedCartInfo,
   calculateTotalPrice,
-  buildReceipt
+  buildReceipt,
+  buildReceiptString,
+  printReceipt
 }
 
