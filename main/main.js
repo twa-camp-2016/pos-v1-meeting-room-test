@@ -16,7 +16,7 @@ function formatTags(tags) {
 }
 
 function _getExistElementByBarcodes(array, barcode) {
-  return array.find((item)=> {return item.barcode === barcode});
+  return array.find((item)=> item.barcode === barcode);
 }
 
 function countBarcodes(formattedTags) {
@@ -44,9 +44,38 @@ function buildCartItems(countedBarcodes,allItems) {
     };
   })
 }
+
+function buildPromotions(cartItems, promotions) {
+  let currentPromotion = promotions.find((promotion) => promotion.type === 'BUY_TWO_GET_ONE_FREE');
+  return cartItems.map((cartItem)=>{
+    let hasPromoted = false;
+    let saved = 0;
+    let payPrice = 0;
+    let promotBarcode = currentPromotion.barcodes.find((barcode)=>barcode === cartItem.barcode);
+    if(promotBarcode){
+      hasPromoted = true;
+    }
+
+    if(hasPromoted){
+      saved = cartItem.price*Math.floor(cartItem.count/3);
+    }
+
+    payPrice = cartItem.price*cartItem.count-saved;
+    return {
+      barcode:cartItem.barcode,
+      name:cartItem.name,
+      unit:cartItem.unit,
+      price:cartItem.price,
+      count:cartItem.count,
+      payPrice,
+      saved
+    };
+  })
+}
 module.exports = {
   formatTags,
   countBarcodes,
   buildCartItems,
+  buildPromotions,
   printReceipt
 }
