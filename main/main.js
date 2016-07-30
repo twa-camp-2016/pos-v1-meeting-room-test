@@ -44,10 +44,10 @@ function _fixPrice(number) {
   return parseFloat(number.toFixed(2));
 }
 function buildPromotedItems(cartItems,promotions) {
-  let currentionPromotion=promotions.find((promotion)=>promotion.type==='BUY_TWO_GET_ONE_FREE');
+  let currentPromotion=promotions.find((promotion)=>promotion.type==='BUY_TWO_GET_ONE_FREE');
   return cartItems.map((cartItem)=>{
     let totalPrice=cartItem.count*cartItem.price;
-    let hasPromoted=currentionPromotion.barcodes.includes(cartItem.barcode);
+    let hasPromoted=currentPromotion.barcodes.includes(cartItem.barcode);
     let saved=0;
     if(hasPromoted&&cartItem.count>=2){
       let savedCount=Math.floor(cartItem.count/3);
