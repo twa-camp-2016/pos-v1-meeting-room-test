@@ -1,5 +1,6 @@
 'use strict';
-let {formatBarcode} = require('../main/main');
+let {loadAllItems} = require('../spec/fixtures');
+let {formatBarcode,buildCarItems} = require('../main/main');
 
 describe('pos', () => {
   it('for mat tags',()=>{
@@ -26,6 +27,27 @@ describe('pos', () => {
 
     ];
     expect(formattedBarcode).toEqual(expected);
+  });
+  it('build car items',()=>{
+    let formattedBarcode = [
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:1},
+      {barcode:'ITEM000005',count:2},
+
+    ];
+    let allItems = loadAllItems();
+    let carItems = buildCarItems(formattedBarcode,allItems);
+    let expected = [
+      {barcode:'ITEM000001',name:'雪碧',unit:'瓶',price:3,count:5},
+      {barcode:'ITEM000003',name:'荔枝',unit:'斤',price:15,count:2.5},
+      {barcode:'ITEM000005',name:'方便面',unit:'袋',price:4.5,count:3},
+    ];
+    expect(carItems).toEqual(expected);
   });
   it('should print text', () => {
 
