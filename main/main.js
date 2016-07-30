@@ -12,14 +12,29 @@ function formatTags(tags) {
       }
     }
     else{
-      return {
-        barcode: tag,
-        count: 1
-      }
+      return {barcode: tag,count: 1}
     }
   });
 }
 
+function _getExitElementByBarcodes(array,barcode) {
+  return _(array).find(element => element.barcode === barcode);
+}
+
+function countBarcodes(formattedTags) {
+  return _(formattedTags).reduce((result,formattedTag) => {
+    let found = _getExitElementByBarcodes(result,formattedTag.barcode);
+    if(found){
+      found.count += formattedTag.count;
+    }
+    else{
+      result.push(formattedTag);
+    }
+    return result;
+  },[]);
+}
+
 module.exports = {
-  formatTags:formatTags
+  formatTags:formatTags,
+  countBarcodes:countBarcodes
 };

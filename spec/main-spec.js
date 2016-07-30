@@ -1,4 +1,4 @@
-let {formatTags} = require('../main/main.js');
+let {formatTags,countBarcodes} = require('../main/main.js');
 let {loadAllItems, loadPromotions} = require('../spec/fixtures.js');
 
 
@@ -31,7 +31,43 @@ describe('pos', () => {
     expect(formattedTags).toEqual(expected);
   });
 
-  it('should print text', () => {
+  it('countBarcodes', function () {
+    let formattedTags = [{
+      barcode: 'ITEM000001',
+      count: 1
+    },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      },
+    ];
+    let expected = [
+      {
+        barcode: 'ITEM000001',
+        count: 2
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      },
+    ];
+    let countedBarcode = countBarcodes(formattedTags);
+    expect(countedBarcode).toEqual(expected);
+  });
+
+  xit('should print text', () => {
 
     const tags = [
       'ITEM000001',
