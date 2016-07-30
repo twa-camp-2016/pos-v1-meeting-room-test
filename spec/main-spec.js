@@ -1,6 +1,32 @@
 'use strict';
-
+let {formatCartCount }=require('../main/main.js');
 describe('pos', () => {
+
+  it('should print cart counts',()=>{
+    const inputs=[
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+    let getCartCounts=formatCartCount(inputs);
+    let printCartCounts=[
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:1},
+      {barcode:'ITEM000005',count:2}
+    ];
+
+    expect(getCartCounts).toEqual(printCartCounts);
+  });
 
   it('should print text', () => {
 
