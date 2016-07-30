@@ -63,7 +63,7 @@ describe('pos', () => {
   })
   it('should get receiptString',() =>{
     let input = {
-      promotedItems: [
+      receiptItems: [
         { name: '可口可乐', unit: '瓶', price: 3.00, count: 2,payprice:6.00,saved:0},
         { name: '雪碧', unit: '瓶', price: 3.00, count: 3,payprice:6.00,saved:3}
       ],

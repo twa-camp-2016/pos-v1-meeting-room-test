@@ -72,6 +72,7 @@ function getReceiptString(receipt){
     receiptString += `名称:${receiptItem.name},数量:${receiptItem.count},单价:${receiptItem.price.toFixed(2)}(元),小计:${receiptItem.payprice.toFixed(2)}(元)`;
     receiptString += "\n";
   }
+  console.log(receiptString)
   const result = `***<没钱赚商店>收据***
 ${receiptString}----------------------
 总计:${totalprice.toFixed(2)}(元)
