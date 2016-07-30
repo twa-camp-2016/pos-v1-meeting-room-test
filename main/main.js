@@ -12,9 +12,26 @@ function getFormattedTags(tags) {
   });
 }
 
+function _getExistElementByBarcode(array,barcode) {
+  return array.find(countItem=>countItem.barcode===barcode);
+}
+function getCountedItems(formattedTags) {
+  let result=[];
+  formattedTags.map((formattedTag)=>{
+    let countedItem=_getExistElementByBarcode(result,formattedTag.barcode);
+    if(countedItem){
+      countedItem.count+=formattedTag.count;
+    }else {
+      result.push(formattedTag);
+    }
+  })
+  return result;
+}
 function printReceipt(tags) {
   let formattedTags=getFormattedTags(tags);
-  console.log(formattedTags);
+  // console.log(formattedTags);
+  let countedItems=getCountedItems(formattedTags);
+  // console.log(countedItems);
 }
 let tags = [
   'ITEM000001',
@@ -25,5 +42,6 @@ let tags = [
 ];
 printReceipt(tags);
 module.exports = {
-  getFormattedTags:getFormattedTags
+  getFormattedTags:getFormattedTags,
+  getCountedItems:getCountedItems
 }

@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags}=require('../main/main.js');
+let {getFormattedTags,getCountedItems}=require('../main/main.js');
 describe('pos', () => {
 
   it('should format tags', () => {
@@ -24,7 +24,27 @@ describe('pos', () => {
 
     expect(formattedTags).toEqual(expectText);
   });
-  
+  it('should count items number', () => {
+
+    const formattedTags =  [
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000001',count:1},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:1},
+      {barcode:'ITEM000005',count:2}
+    ];
+
+    let countedItems=getCountedItems(formattedTags);
+
+    const expectText = [
+      {barcode:'ITEM000001',count:2},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:3}
+    ];
+
+    expect(countedItems).toEqual(expectText);
+  });
+
 //   it('should print text', () => {
 //
 //     const tags = [
