@@ -25,17 +25,46 @@ function formatCartCount(tags){
   //console.log(a);
   return a;
 }
-function _getElementById(array, Id) {
-  return array.find((element)=>element.id===Id);
+function _getElementById(array, barcode) {
+  return array.find((element)=>element.barcode===barcode);
+}
+
+function getCartCounts(formattedCounts){
+
+  let b= formattedCounts.reduce((result,formattedTag)=>{
+    let found=_getElementById(result,formattedTag.barcode);
+    //console.log(result);
+    //console.log(formattedTag);
+    //console.log(found);
+    if(found){
+      found.count+=formattedTag.count;
+    }else
+    {
+      result.push(formattedTag);
+    }
+    return result;
+  },[]);
+return b;
+//console.log(b);
 }
 
 function Receipt(tags)
 {
   let formattedCounts=formatCartCount(tags);
+  let cartCount=getCartCounts(formattedCounts)
 }
 
 Receipt(tags);
 
 module.exports = {
-  formatCartCount:formatCartCount
+  formatCartCount:formatCartCount,
+  getCartCounts:getCartCounts
 };
+
+
+
+// return foodCounts.map(({id, count})=> {
+//   let found = _getElementById(allItems, id);
+//   return {id, name: found.name, count, price: found.price};
+//
+// });
