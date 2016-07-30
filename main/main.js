@@ -87,12 +87,21 @@ function calculateToTalPrices(promotedItems) {
 
 //#6
 function buildReceipt(promotedItems, totalPrices) {
-  let receiptItems = promotedItems.map((promotedItem) =);
+  let receiptItems = promotedItems.map((promotedItem) => {
+    return {
+      name: promotedItem.name,
+      unit: promotedItem.unit,
+      price: promotedItem.price,
+      count: promotedItem.count,
+      payPrice: promotedItem.payPrice
+    };
+  });
 
   return {
-
+    receiptItems,
+    totalPayPrice: totalPrices.totalPayPrice,
+    totalSaved: totalPrices.totalSaved
   };
-
 }
 
 
