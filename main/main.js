@@ -10,7 +10,9 @@ function printReceipt(tags) {
   let promotedItems = buildPromotedItems(cartItems,promotions);
   let totalPrices = calculateTotalPrices(promotedItems);
   let receiptModel = buildReceipt(promotedItems, totalPrices);
-}
+  let receiptString = buildReceiptString(receiptModel);
+  console.log(receiptString);
+ }
 function getFormattedItems(tags) {
   return tags.map((tag) => {
     if(tag.includes('-')){
@@ -65,6 +67,20 @@ function buildReceipt(promotedItems,totalPrices) {
     totalPayPrice:totalPrices.totalPayPrice,
     totalSaved:totalPrices.totalSaved
   }
+}
+function buildReceiptString(receiptModel) {
+  let lines = ['***<没钱赚商店>收据***'];
+  
+  for(let{name,count,unit,price,payPrice} of receiptModel.promotedItems){
+    let line = `名称：${name}，数量：${count}${unit}，单价：${price.toFixed(2)}(元)，小计：${payPrice.toFixed(2)}(元)`;
+    lines.push(line);
+  }
+  lines.push('----------------------');
+  lines.push(`总计：${receiptModel.totalPayPrice.toFixed(2)}(元)`);
+  lines.push(`节省：${receiptModel.totalSaved.toFixed(2)}(元)`);
+  lines.push('**********************');
+  
+  return lines.join('\n')
 }
 module.exports = {
   printReceipt,
