@@ -1,8 +1,17 @@
 'use strict';
 let {
   getFormatedTags,
-  getCountTags
+  getCountTags,
+  getCartItems,
+  getPromotionItems,
+  calulateTotalPrice,
+  buildReceipt
 } = require('../main/main');
+
+let {
+  loadAllItems,
+  loadPromotions
+} = require('../spec/fixtures');
 
 describe('pos unit', ()=> {
   it('getFormatedTags', ()=> {
@@ -38,23 +47,79 @@ describe('pos unit', ()=> {
     expect(countTags).toEqual(result);
   });
 
-  it('get', ()=> {
-    let formatedTags = [
-      {barcode: 'ITEM000003', count: 2.5},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000001', count: 2}
-    ];
-
+  it('getCartItems', ()=> {
     let countTags = [
       {barcode: 'ITEM000003', count: 2.5},
       {barcode: 'ITEM000005', count: 3},
       {barcode: 'ITEM000001', count: 2}
     ];
-    let result = getCountTags(formatedTags);
-    expect(countTags).toEqual(result);
+    let cartItems = [
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5},
+      {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3},
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2}
+    ];
+    let allItems = loadAllItems();
+    let result = getCartItems(allItems, countTags);
+    expect(cartItems).toEqual(result);
   });
+
+  it('getCartItems', ()=> {
+    let cartItems = [
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5},
+      {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3},
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2}
+    ];
+
+    let promotedItems = [
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5, payPrice: 37.5, saved: 0},
+      {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3, payPrice: 9, saved: 4.50},
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2, payPrice: 6, saved: 0}
+    ];
+    let promotions = loadPromotions();
+    let result = getPromotionItems(promotions, cartItems);
+    expect(promotedItems).toEqual(result);
+  });
+
+  it('calulateTotalPrice', ()=> {
+    let promotedItems = [
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5, payPrice: 37.5, saved: 0},
+      {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3, payPrice: 9, saved: 4.50},
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2, payPrice: 6, saved: 0}
+    ];
+    let totalPriceAndsaved = {
+      totalPrice: 52.5,
+      totalSaved: 4.5
+    }
+    let result = calulateTotalPrice(promotedItems);
+    expect(totalPriceAndsaved).toEqual(result);
+  });
+
+  it('buildReceipt', ()=> {
+    let promotedItems = [
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5, payPrice: 37.5, saved: 0},
+      {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3, payPrice: 9, saved: 4.50},
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2, payPrice: 6, saved: 0}
+    ];
+
+    let totalPriceAndsaved = {
+      totalPrice: 52.5,
+      totalSaved: 4.5
+    }
+
+    let receipt = {
+      items: [
+        {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00, count: 2.5, payPrice: 37.5, saved: 0},
+        {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50, count: 3, payPrice: 9, saved: 4.50},
+        {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00, count: 2, payPrice: 6, saved: 0}
+      ],
+      totalPrice: 52.5,
+      totalSaved: 4.5
+    }
+
+    let result = buildReceipt(promotedItems,totalPriceAndsaved);
+    expect(receipt).toEqual(result);
+  });
+
 });
 
 
@@ -89,3 +154,4 @@ describe('pos', () => {
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 });
+
