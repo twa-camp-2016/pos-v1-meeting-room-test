@@ -87,15 +87,22 @@ function getCartItems(allItems, countBarcodes) {
     return {barcode, name, unit, price, count};
   });
 }
-function getPayPrice(promotions,cartItems) {
+function getPayPrice(promotions, cartItems) {
   let currentPromotion = promotions.find((promotion) => promotion.type === "BUY_TWO_GET_ONE_FREE");
   return cartItems.map((cartItem) => {
     let hasPromoted = currentPromotion.barcodes.includes(cartItem.barcode);
-    let savedCount = Math.floor(cartItem.count/3);
-    let saved =hasPromoted?savedCount*cartItem.price:0 ;
-    let payPrice = cartItem.price*cartItem.count - parseFloat(saved).toFixed(2);
+    let savedCount = Math.floor(cartItem.count / 3);
+    let saved = hasPromoted ? savedCount * cartItem.price : 0;
+    let payPrice = cartItem.price * cartItem.count - parseFloat(saved).toFixed(2);
     return Object.assign({}, cartItem, {payPrice, saved});
   });
+}
+function getTotalPrices(promotionItems) {
+  return promotionItems.reduce((result, promotionItem)=> {
+    result.totalPayPrice += promotionItem.payPrice;
+    result.totalSaved += promotionItem.saved;
+    return result;
+  }, {totalPayPrice: 0, totalSaved: 0});
 }
 
 function printReceipt(tags) {
@@ -104,8 +111,9 @@ function printReceipt(tags) {
   let allItems = loadAllItems();
   let cartItems = getCartItems(allItems, countBarcodes);
   let promotions = loadPromotions();
-  let promotionItems = getPayPrice(promotions,cartItems);
-  return promotionItems;
+  let promotionItems = getPayPrice(promotions, cartItems);
+  let totalPrices = getTotalPrices(promotionItems);
+  return totalPrices;
 }
 console.log(printReceipt(tags));
-module.exports = {getFormattedTags, getCount,loadAllItems, getCartItems,loadPromotions,getPayPrice}
+module.exports = {getFormattedTags, getCount, loadAllItems, getCartItems, loadPromotions, getPayPrice, getTotalPrices}

@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags, getCount,loadAllItems,getCartItems,loadPromotions,getPayPrice}=require('../main/main');
+let {getFormattedTags, getCount,loadAllItems,getCartItems,loadPromotions,getPayPrice,getTotalPrices}=require('../main/main');
 describe('pos', () => {
   it('getFormattedTags', function () {
     let tags = ['ITEM000001', 'ITEM000001', 'ITEM000003-2.5'];
@@ -43,7 +43,14 @@ describe('pos', () => {
       { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2, payPrice: 30, saved: 0 } ];
     expect(promotionItems).toEqual(expected);
   });
-  
+  it('getTotalPrice',function () {
+    let promotions = [
+      { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12, saved: 3 },
+      { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2, payPrice: 30, saved: 0 }];
+    let totalPrices = getTotalPrices(promotions);
+    let expected = {totalPayPrice:42,totalSaved :3}
+    expect(totalPrices).toEqual(expected);
+  })
 // it('should print text', () => {
 //
 //   const tags = [
