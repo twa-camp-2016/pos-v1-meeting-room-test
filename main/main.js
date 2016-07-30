@@ -1,7 +1,13 @@
 'use strict';
 let {loadAllItems,loadPromotions} = require('../spec/fixtures');
+let _ = require('lodash');
 function printReceipt(tags) {
-
+  let formattedTags = formatTags(tags);
+  let countedBarcodes= countBarcodes(formattedTags);
+  let allItems = loadAllItems();
+  let cartItems = buildCartItems(countedBarcodes,allItems);
+  let promotions = loadPromotions();
+  let promotedItems = buildPromotions(cartItems,promotions);
 }
 
 function formatTags(tags) {
@@ -72,10 +78,18 @@ function buildPromotions(cartItems, promotions) {
     };
   })
 }
+
+function calculateTotalPrices(promotedItems) {
+  return {
+    totalPayPrice:_.sumBy(promotedItems,'payPrice'),
+    totalSaved:_.sumBy(promotedItems,'saved')
+  };
+}
 module.exports = {
   formatTags,
   countBarcodes,
   buildCartItems,
   buildPromotions,
+  calculateTotalPrices,
   printReceipt
 }
