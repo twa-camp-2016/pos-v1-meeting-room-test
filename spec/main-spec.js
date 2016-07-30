@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags,getCountedItems,loadAllItems,buildCartItems,loadPromotions,buildPromotedItems,calculateTotalPrices}=require('../main/main.js');
+let {getFormattedTags, getCountedItems, loadAllItems, buildCartItems, loadPromotions, buildPromotedItems, calculateTotalPrices,buildReceipt}=require('../main/main.js');
 describe('pos', () => {
 
   it('should format tags', () => {
@@ -12,34 +12,34 @@ describe('pos', () => {
       'ITEM000005-2'
     ];
 
-    let formattedTags=getFormattedTags(tags);
+    let formattedTags = getFormattedTags(tags);
 
     const expectText = [
-      {barcode:'ITEM000001',count:1},
-      {barcode:'ITEM000001',count:1},
-      {barcode:'ITEM000003',count:2.5},
-      {barcode:'ITEM000005',count:1},
-      {barcode:'ITEM000005',count:2}
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
     ];
 
     expect(formattedTags).toEqual(expectText);
   });
   it('should count items number', () => {
 
-    const formattedTags =  [
-      {barcode:'ITEM000001',count:1},
-      {barcode:'ITEM000001',count:1},
-      {barcode:'ITEM000003',count:2.5},
-      {barcode:'ITEM000005',count:1},
-      {barcode:'ITEM000005',count:2}
+    const formattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
     ];
 
-    let countedItems=getCountedItems(formattedTags);
+    let countedItems = getCountedItems(formattedTags);
 
     const expectText = [
-      {barcode:'ITEM000001',count:2},
-      {barcode:'ITEM000003',count:2.5},
-      {barcode:'ITEM000005',count:3}
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3}
     ];
 
     expect(countedItems).toEqual(expectText);
@@ -47,13 +47,13 @@ describe('pos', () => {
 
   it('should build cart items', () => {
 
-    let countedItems =   [
-      {barcode:'ITEM000001',count:2},
-      {barcode:'ITEM000003',count:2.5},
-      {barcode:'ITEM000005',count:3}
+    let countedItems = [
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3}
     ];
-    let allItems=loadAllItems();
-    let cartItems=buildCartItems(countedItems,allItems);
+    let allItems = loadAllItems();
+    let cartItems = buildCartItems(countedItems, allItems);
 
     const expectText = [
       {
@@ -61,21 +61,21 @@ describe('pos', () => {
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:2
+        count: 2
       },
       {
         barcode: 'ITEM000003',
         name: '荔枝',
         unit: '斤',
         price: 15.00,
-        count:2.5
+        count: 2.5
       },
       {
         barcode: 'ITEM000005',
         name: '方便面',
         unit: '袋',
         price: 4.50,
-        count:3
+        count: 3
       }
     ];
 
@@ -83,59 +83,59 @@ describe('pos', () => {
   });
   it('should build promoted items', () => {
 
-    let cartItems =  [
+    let cartItems = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:6
+        count: 6
       },
       {
         barcode: 'ITEM000003',
         name: '荔枝',
         unit: '斤',
         price: 15.00,
-        count:3.5
+        count: 3.5
       },
       {
         barcode: 'ITEM000005',
         name: '方便面',
         unit: '袋',
         price: 4.50,
-        count:2
+        count: 2
       }
     ];
-    let promotions=loadPromotions();
-    let promotedItems=buildPromotedItems(cartItems,promotions);
+    let promotions = loadPromotions();
+    let promotedItems = buildPromotedItems(cartItems, promotions);
 
-    const expectText =[
+    const expectText = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:6,
-        payPrice:12,
-        saved:6
+        count: 6,
+        payPrice: 12,
+        saved: 6
       },
       {
         barcode: 'ITEM000003',
         name: '荔枝',
         unit: '斤',
         price: 15.00,
-        count:3.5,
-        payPrice:52.5,
-        saved:0
+        count: 3.5,
+        payPrice: 52.5,
+        saved: 0
       },
       {
         barcode: 'ITEM000005',
         name: '方便面',
         unit: '袋',
         price: 4.50,
-        count:2,
-        payPrice:9,
-        saved:0
+        count: 2,
+        payPrice: 9,
+        saved: 0
       }
     ];
 
@@ -143,40 +143,84 @@ describe('pos', () => {
   });
   it('should calculate total prices', () => {
 
-    let promotedItems=[
+    let promotedItems = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:6,
-        payPrice:12,
-        saved:6
+        count: 6,
+        payPrice: 12,
+        saved: 6
       },
       {
         barcode: 'ITEM000003',
         name: '荔枝',
         unit: '斤',
         price: 15.00,
-        count:3.5,
-        payPrice:52.5,
-        saved:0
+        count: 3.5,
+        payPrice: 52.5,
+        saved: 0
       },
       {
         barcode: 'ITEM000005',
         name: '方便面',
         unit: '袋',
         price: 4.50,
-        count:2,
-        payPrice:9,
-        saved:0
+        count: 2,
+        payPrice: 9,
+        saved: 0
       }
     ];
-    let totalPrices=calculateTotalPrices(promotedItems);
+    let totalPrices = calculateTotalPrices(promotedItems);
 
-    const expectText ={ totalPayPrice: 73.5, totalSavd: 6 };
+    const expectText = {totalPayPrice: 73.5, totalSaved: 6};
 
     expect(totalPrices).toEqual(expectText);
+  });
+  it('should build receipt', () => {
+
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 6,
+        payPrice: 12,
+        saved: 6
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 3.5,
+        payPrice: 52.5,
+        saved: 0
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 2,
+        payPrice: 9,
+        saved: 0
+      }
+    ];
+    let totalPrices ={totalPayPrice: 73.5, totalSaved: 6};
+    let receipt=buildReceipt(promotedItems,totalPrices);
+
+    const expectText = {
+      promotedItem: [{name: '雪碧', unit: '瓶', price: 3, count: 6},
+        {name: '荔枝', unit: '斤', price: 15, count: 3.5},
+        {name: '方便面', unit: '袋', price: 4.5, count: 2}],
+      totalPayPrice: 73.5,
+      totalSavd: 6
+    };
+
+    expect(receipt).toEqual(expectText);
   });
 //   it('should print text', () => {
 //

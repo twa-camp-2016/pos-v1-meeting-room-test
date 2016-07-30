@@ -59,9 +59,21 @@ function buildPromotedItems(cartItems,promotions) {
 function calculateTotalPrices(promotedItems) {
   return promotedItems.reduce((result,{payPrice,saved})=>{
     result.totalPayPrice+=payPrice;
-    result.totalSavd+=saved;
+    result.totalSaved+=saved;
     return result;
-  },{totalPayPrice:0,totalSavd:0})
+  },{totalPayPrice:0,totalSaved:0})
+}
+
+function buildReceipt(promotedItems,totalPrices) {
+  let promotedItem=promotedItems.map(({name,unit,price,count})=>{
+    return {name,unit,price,count};
+  });
+
+  return {
+    promotedItem,
+    totalPayPrice:totalPrices.totalPayPrice,
+    totalSavd:totalPrices.totalSaved
+  }
 }
 function printReceipt(tags) {
   let formattedTags=getFormattedTags(tags);
@@ -76,6 +88,8 @@ function printReceipt(tags) {
   // console.log(promotedItems);
   let totalPrices=calculateTotalPrices(promotedItems);
   // console.log(totalPrices);
+  let receipt=buildReceipt(promotedItems,totalPrices);
+  console.log(receipt);
 }
 let tags = [
   'ITEM000001',
@@ -153,5 +167,6 @@ module.exports = {
   buildCartItems:buildCartItems,
   loadPromotions:loadPromotions,
   buildPromotedItems:buildPromotedItems,
-  calculateTotalPrices:calculateTotalPrices
+  calculateTotalPrices:calculateTotalPrices,
+  buildReceipt:buildReceipt
 }
