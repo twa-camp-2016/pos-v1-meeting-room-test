@@ -1,6 +1,19 @@
 'use strict';
-
+let {getFormattedItems,printReceipt} = require('../main/main');
 describe('pos', () => {
+  it('getFormattedItems', () => {
+    let tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2'
+    ];
+    let formattedItems = getFormattedItems(tags);
+    let expected = [
+      
+    ]
+  })
 
   it('should print text', () => {
 
