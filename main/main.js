@@ -12,41 +12,22 @@ let tags = [
 ];
 function loadAllItems() {
   return [
+    {barcode: 'ITEM000000', name: '可口可乐', unit: '瓶', price: 3.00},
+    {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3.00},
+    {barcode: 'ITEM000002', name: '苹果', unit: '斤', price: 5.50},
+    {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15.00},
+    {barcode: 'ITEM000004', name: '电池', unit: '个', price: 2.00},
+    {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.50}];
+}
+function loadPromotions() {
+  return [
     {
-      barcode: 'ITEM000000',
-      name: '可口可乐',
-      unit: '瓶',
-      price: 3.00
-    },
-    {
-      barcode: 'ITEM000001',
-      name: '雪碧',
-      unit: '瓶',
-      price: 3.00
-    },
-    {
-      barcode: 'ITEM000002',
-      name: '苹果',
-      unit: '斤',
-      price: 5.50
-    },
-    {
-      barcode: 'ITEM000003',
-      name: '荔枝',
-      unit: '斤',
-      price: 15.00
-    },
-    {
-      barcode: 'ITEM000004',
-      name: '电池',
-      unit: '个',
-      price: 2.00
-    },
-    {
-      barcode: 'ITEM000005',
-      name: '方便面',
-      unit: '袋',
-      price: 4.50
+      type: 'BUY_TWO_GET_ONE_FREE',
+      barcodes: [
+        'ITEM000000',
+        'ITEM000001',
+        'ITEM000005'
+      ]
     }
   ];
 }
@@ -105,6 +86,21 @@ function buildCartItems(countedBarcodes, allItems) {
   return result;
 }
 
+function _fixPrice(number) {
+  return parseFloat(number.toFixed(2))
+}
+
+function buildPromotedItems(cartItems, promotions) {
+  let currentPromotion = _.find(promotions, x=> x.type === 'BUY_TWO_GET_ONE_FREE');
+  return _.map(cartItems, x=> {
+    let hasPromoted = _.includes(currentPromotion.barcodes, x.barcode);
+    let totalPrice = x.price * x.count;
+    let payPrice = _.parseInt(x.count / 3) * x.price * 2 + (x.count % 3) * x.price;
+    let saved = hasPromoted ? totalPrice - payPrice : 0;
+    return _.assign({}, x, {payPrice, saved: _fixPrice(saved)});
+  });
+}
+
 let formattedTags = getFormattedTags(tags);
 let countedBarcodes = getCountBarcodes(formattedTags);
 let allItems = loadAllItems();
@@ -114,5 +110,7 @@ module.exports = {
   getFormattedTags: getFormattedTags,
   getCountBarcodes: getCountBarcodes,
   buildCartItems: buildCartItems,
-  loadAllItems: loadAllItems
+  loadAllItems: loadAllItems,
+  loadPromotions: loadPromotions,
+  buildPromotedItems: buildPromotedItems
 };
