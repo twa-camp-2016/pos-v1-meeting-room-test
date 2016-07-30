@@ -58,7 +58,7 @@ describe('pos', () => {
 
     let cartItems = main.buildCartItems(countedBarcodes, allItems);
 
-    const expectCartItems = [
+    const expected = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
@@ -75,8 +75,52 @@ describe('pos', () => {
       }
     ];
 
-    expect(cartItems).toEqual(expectCartItems);
+    expect(cartItems).toEqual(expected);
 
+  });
+
+  it('#4.buildPromotedItems', () => {
+    let cartItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2
+      }
+    ];
+    let promotions = loadPromotions();
+
+    let promotedItems = main.buildPromotedItems(cartItems, promotions);
+
+    const expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+    expect(promotedItems).toEqual(expected)
   });
 
 

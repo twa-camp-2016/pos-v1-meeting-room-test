@@ -50,9 +50,34 @@ function buildCartItems(countedBarcodes, allItems) {
   });
 }
 
+//#4
+function buildPromotedItems(cartItems, promotions) {
+  let currentPromotion = promotions[0];
+  return cartItems.map((cartItem) => {
+    let saved = 0;
+    let hasPromoted = currentPromotion.barcodes.includes(cartItem.barcode);
+    if (hasPromoted && currentPromotion.type === 'BUY_TWO_GET_ONE_FREE') {
+      let savedCount = Math.floor(cartItem.count / 3);
+      saved = savedCount * cartItem.price;
+    }
+    let payPrice = cartItem.count * cartItem.price - saved;
+
+    return {
+      barcode: cartItem.barcode,
+      name: cartItem.name,
+      unit: cartItem.unit,
+      price: cartItem.price,
+      count: cartItem.count,
+      payPrice,
+      saved
+    };
+  });
+}
+
 
 module.exports = {
   formatTags,
   countBarcodes,
-  buildCartItems
+  buildCartItems,
+  buildPromotedItems
 };
