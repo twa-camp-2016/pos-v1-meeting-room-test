@@ -1,0 +1,2 @@
+Object({ receiptItem: [ Object({ name: '雪碧', unit: '瓶', price: 3, count: 1, totalPayPrice: 3 }), Object({ name: '方便面', unit: '袋', price: unt: 3, totalPayPrice: 9 }) ], totalPayPrice: 12, totalSaved: 4.5 }) to equal
+Object({ receiptItem: [ Object({ name: '雪碧', unit: '瓶', price: 3, count: 1, payPric3 }), Object({ name: '方便面', unit: '袋', price: 4.5, count: 3, payPrice: 9 }) ], totalPayPrice: 12, totalSaved: 4.5 }).

@@ -80,13 +80,33 @@ function calculateTotalPrice(promotedCartsInfo) {
   },{totalPayPrice:0,totalSaved:0})
 }
 
+function buildReceipt(promotedCartsInfo,totalPrices){
+  let result = [];
+  let receiptItems = [];
 
+  for(let element of promotedCartsInfo){
+    receiptItems.push({
+      name:element.name,
+      unit:element.unit,
+      price:element.price,
+      count:element.count,
+      totalPayPrice:element.payPrice
+    });
+  }
+  result = {
+    receiptItem:receiptItems,
+    totalPayPrice:totalPrices.totalPayPrice,
+    totalSaved:totalPrices.totalSaved
+  };
+  return result;
+}
 
 module.exports = {
   getFormatedTags,
   countBarcodes,
   buildCartItems,
   getPromotedCartInfo,
-  calculateTotalPrice
+  calculateTotalPrice,
+  buildReceipt
 }
 

@@ -156,7 +156,7 @@ describe('pos', () => {
     expect(promotedCartInfo).toEqual(expected);
   })
 
-  fit('get totalPrice' ,() => {
+  it('get totalPrice' ,() => {
     var promotedCartInfo = [ {
       barcode: 'ITEM000001',
       name: '雪碧',
@@ -183,6 +183,48 @@ describe('pos', () => {
     }
     expect(totalPrices).toEqual(expected);
   })
-});
 
+  fit('build receipt' ,() => {
+    let promotedCartsInfo =  [ {
+      barcode: 'ITEM000001',
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00,
+      count:1,
+      payPrice:3.00,
+      saved:0
+    },{
+      barcode: 'ITEM000005',
+      name: '方便面',
+      unit: '袋',
+      price: 4.50,
+      count:3,
+      payPrice:9,
+      saved:4.50
+    }];
 
+    let totalPrices = {
+      totalPayPrice : 12,
+      totalSaved : 4.50
+    }
+    let receipt = main.buildReceipt(promotedCartsInfo,totalPrices);
+
+    let expected = {receiptItem: [{
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00,
+      count:1,
+      totalPayPrice:3.00
+    },{
+      name: '方便面',
+      unit: '袋',
+      price: 4.50,
+      count:3,
+      totalPayPrice:9
+    }],
+      totalPayPrice : 12,
+      totalSaved : 4.50
+    }
+    expect(receipt).toEqual(expected);
+  })
+})
