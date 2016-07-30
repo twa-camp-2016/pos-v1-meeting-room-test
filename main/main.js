@@ -35,8 +35,22 @@ function countBarcodes(formatedTags) {
   },[]);
 }
 
+function buildCartItems(countBarcodes,allItems){
+  return countBarcodes.map((countBarcode) => {
+    let found = getElementByBarcode(allItems,countBarcode.barcode);
+    return {
+      barcode:found.barcode,
+      name:found.name,
+      unit:found.unit,
+      price:found.price,
+      count:countBarcode.count
+    }
+  })
+}
+
 module.exports = {
   getFormatedTags,
-  countBarcodes
+  countBarcodes,
+  buildCartItems
 }
 
