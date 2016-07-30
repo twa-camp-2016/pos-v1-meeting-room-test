@@ -60,4 +60,32 @@ describe('pos', () => {
     }];
     expect(formattedTags).toEqual(expected);
   })
+
+
+  fit('count tags' ,() => {
+    const formattedTags = [{
+      barcode: 'ITEM000001',
+      count:1
+    },{
+      barcode: 'ITEM000001',
+      count:1
+    },{
+      barcode: 'ITEM000005',
+      count:1
+    },{
+      barcode: 'ITEM000005',
+      count:2
+    }];
+
+    let countBarcode = main.countBarcodes(formattedTags)
+
+    let expected = [{
+      barcode: 'ITEM000001',
+      count:2
+    },{
+      barcode: 'ITEM000005',
+      count:3
+    }];
+    expect(countBarcode).toEqual(expected);
+  })
 });

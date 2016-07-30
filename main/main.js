@@ -23,9 +23,20 @@ function getFormatedTags(tags) {
   });
 }
 
-
+function countBarcodes(formatedTags) {
+  return formatedTags.reduce((result, formatedTag) => {
+    let found = getElementByBarcode(result, formatedTag.barcode);
+    if (found) {
+      found.count += formatedTag.count;
+    } else {
+      result.push(formatedTag);
+    }
+    return result;
+  },[]);
+}
 
 module.exports = {
-  getFormatedTags
+  getFormatedTags,
+  countBarcodes
 }
 
