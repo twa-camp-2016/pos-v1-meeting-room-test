@@ -1,5 +1,5 @@
 'use strict';
-let {formattedTags, countedBarcodes} =require("../main/main.js");
+let {formattedTags, countedBarcodes,buildAllItems} =require("../main/main.js");
 
 describe('pos', () => {
   fit('#1should formattedTags', () => {
@@ -28,7 +28,7 @@ describe('pos', () => {
 });
 
 describe('pos', () => {
-  fit('#CcountedBarcodes', () => {
+  fit('#2CcountedBarcodes', () => {
     let formattedTags = [
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
@@ -42,12 +42,126 @@ describe('pos', () => {
     let expectText = [
       {barcode: 'ITEM000001', count: 4},
       {barcode: 'ITEM000003', count: 2.5},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 2}
+      {barcode: 'ITEM000005', count: 3},
     ];
     expect(countedBarcodes).toHaveBeenCalledWith(expectText);
   });
 });
+ddescribe('buildAllItems', () => {
+  it('#buildAllItems', () => {
+    let countedBarcodes =[
+      {barcode: 'ITEM000001', count: 4},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3},
+
+    ];
+    let AllItems= loadAllItems();
+    let cartAllItems = buildAllItems(countedBarcodes,AllItems);
+    let expectText = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 4
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3
+      }
+    ];
+    expect(cartAllItems).toHaveBeenCalledWith(expectText);
+  });
+});
+
+
+describe('buildPromotions', () => {
+  it('#buildPromotions', () => {
+
+    let cartAllItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 4
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3
+      }
+    ];
+
+    let promotions = loadPromotions();
+    let buildPromotions = getPromotions(promotions,cartAllItems)
+    let promotionsItems=
+      [{
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 4,
+        type: 'BUY_TWO_GET_ONE_FREE',
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5,
+        type:'OTHER_PROMOTION'
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3,
+        type:'BUY_TWO_GET_ONE_FREE'
+      }
+    ];
+
+
+    expect(promotionsItems).toHaveBeenCalledWith(expectText);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 describe('pos', () => {
