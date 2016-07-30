@@ -32,9 +32,24 @@ function buildCartBarcode(countedItems,allItems){
     return {barcode,name:found.name,unit:found.unit,price:found.price,count}
   })
 }
+function buildPromotionItems(cartItems,promotions){
+  let promotion =promotions[0];
+  return cartItems.map(({barcode,name,unit,price,count})=>{
+    let exit =false;
+    let found = promotion.barcodes.find((item)=>item===barcode);
+    if(found && promotion.type==='BUY_TWO_GET_ONE_FREE'){
+      exit=true;
+    }
+    console.log(exit);
+    let save = exit?Math.floor(count/2)*price:0;
+    let payPrice =count*price-save;
+    return {barcode,name,unit,price,count,save,payPrice}
+  })
+}
 
 module.exports = {
   buildFormattedBarcode,
   buildCountedBarcode,
-  buildCartBarcode
+  buildCartBarcode,
+  buildPromotionItems
 }
