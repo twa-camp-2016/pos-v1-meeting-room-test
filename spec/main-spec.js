@@ -5,7 +5,8 @@ let {
   countBarcode,
   buildCartItems,
   buildPromotedItems,
-  calculateTotalPrice
+  calculateTotalPrice,
+  buildReceipt
 } = require("../main/main.js");
 let {loadAllItems, loadPromotions} = require("../spec/fixtures");
 
@@ -98,6 +99,23 @@ describe('pos', () => {
 
      expect(totalPrices).toEqual(expected);
  });
+  it("#6", () =>{
+    let promotedItems = [{barcode: 'ITEM000001', count: 5, name: '雪碧', unit: '瓶', price: 3.00,saved:3.00,payPrice:12.00},
+      {barcode: 'ITEM000003', count: 2.5, name: '荔枝', unit: '斤', price: 15.00, saved:0, payPrice:37.50},
+      {barcode: 'ITEM000005', count: 3, name: '方便面', unit: '袋', price: 4.50, saved:4.50, payPrice:9.00}];
+
+    let totalPrices = {totalPrice:58.50,totalSaved: 7.50};
+
+    let receipt = buildReceipt(promotedItems,totalPrices);
+
+    let expected = {promotedItems:[{barcode: 'ITEM000001', count: 5, name: '雪碧', unit: '瓶', price: 3.00,saved:3.00,payPrice:12.00},
+      {barcode: 'ITEM000003', count: 2.5, name: '荔枝', unit: '斤', price: 15.00, saved:0, payPrice:37.50},
+      {barcode: 'ITEM000005', count: 3, name: '方便面', unit: '袋', price: 4.50, saved:4.50, payPrice:9.00}],
+      totalPrice:58.50,totalSaved: 7.50
+    };
+
+    expect(receipt).toEqual(expected);
+  });
 
 
   it('should print text', () => {
