@@ -48,9 +48,34 @@ function buildCartItems(countBarcodes,allItems){
   })
 }
 
+function getPromotedCartInfo(cartItems,promotions) {
+  let currentPromotion = promotions[0];
+  let hasPromoted = false;
+
+  return cartItems.map((cartItem) => {
+      if(currentPromotion.barcodes.includes(cartItem.barcode)){
+        hasPromoted = true;
+        let savdCount = Math.floor(cartItem.count / 3);
+        var saved = cartItem.price * savdCount;
+      }else{
+        var saved = 0;
+      }
+    return {
+      barcode:cartItem.barcode,
+      name:cartItem.name,
+      unit:cartItem.unit,
+      price:cartItem.price,
+      count:cartItem.count,
+      saved:saved
+    }
+  })
+
+}
+
 module.exports = {
   getFormatedTags,
   countBarcodes,
-  buildCartItems
+  buildCartItems,
+  getPromotedCartInfo
 }
 
