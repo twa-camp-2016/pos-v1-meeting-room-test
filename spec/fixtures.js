@@ -55,5 +55,5 @@ function loadPromotions() {
 }
 module.exports = {
   loadAllItems,
-  loadPromotion
+  loadPromotions
 }

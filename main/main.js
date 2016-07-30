@@ -1,8 +1,10 @@
 'use strict';
-
+let {loadAllItems,loadPromotions} = require('../spec/fixtures')
 function printReceipt(tags) {
   let formattedItems = getFormattedItems(tags);
   let countBarcode = getCountBarcodes(formattedItems);
+  let allItems = loadAllItems();
+  let cartItems = buildCartItems(countBarcode,allItems);
 }
 function getFormattedItems(tags) {
   return tags.map((tag) => {
@@ -28,8 +30,15 @@ function getCountBarcodes(formatTags) {
     return result
   },[])
 }
+function buildCartItems(countBarcodes,allItems) {
+  return countBarcodes.map(({barcode,count}) => {
+    let {name,unit,price} = _geExitsElementByBarcode(allItems,barcode);
+    return {barcode,name,unit,price,count};
+  })
+}
 module.exports = {
   printReceipt,
   getFormattedItems,
-  getCountBarcodes
+  getCountBarcodes,
+  buildCartItems
 }
