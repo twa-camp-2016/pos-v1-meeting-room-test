@@ -54,20 +54,20 @@ describe('pos', () => {
     let allItems=loadAllItems();
     let getItems=buildAllItems(inputs,allItems);
     let printItems=[ { barcode: 'ITEM000001',
-      name: '方便面',
+      name: '雪碧',
       count: 5,
-      unit: '袋',
-      price: 4.5 },
+      unit: '瓶',
+      price: 3 },
       { barcode: 'ITEM000003',
         name: '荔枝',
         count: 2.5,
         unit: '斤',
         price: 15 },
       { barcode: 'ITEM000005',
-        name: '荔枝',
+        name: '方便面',
         count: 3,
-        unit: '斤',
-        price: 15 } ];
+        unit: '袋',
+        price: 4.5 } ];
     expect(getItems).toEqual(printItems);
   });
 

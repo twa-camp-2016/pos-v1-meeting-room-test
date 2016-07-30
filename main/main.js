@@ -49,9 +49,9 @@ function loadAllItems() {
   return [
     {
       barcode: 'ITEM000001',
-      name: '方便面',
-      unit: '袋',
-      price: 4.50
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00
     },
     {
       barcode: 'ITEM000003',
@@ -61,9 +61,9 @@ function loadAllItems() {
     },
     {
       barcode: 'ITEM000005',
-      name: '荔枝',
-      unit: '斤',
-      price: 15.00
+      name: '方便面',
+      unit: '袋',
+      price: 4.50
     }];
 }
 function buildAllItems(cartCount,allItems){
