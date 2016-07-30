@@ -109,6 +109,20 @@ function calculateTotalPrices(promotedItems) {
   }, {totalPayPrice: 0, totalSaved: 0});
 }
 
+function buildReceipt(promotedItems, {totalPayPrice, totalSaved}) {
+  let savedItems = _.chain(promotedItems).filter(x=> x.saved > 0).map(({name, count, unit})=> {
+    return {name, count, unit}
+  }).value();
+
+  return {
+    promotedItems: promotedItems.map(({name, unit, price, count, payPrice, saved})=> {
+      return {name, unit, price, count, payPrice, saved}
+    }),
+    savedItems,
+    totalPayPrice, totalSaved
+  }
+}
+
 module.exports = {
   getFormattedTags: getFormattedTags,
   getCountBarcodes: getCountBarcodes,
@@ -116,5 +130,6 @@ module.exports = {
   loadAllItems: loadAllItems,
   loadPromotions: loadPromotions,
   buildPromotedItems: buildPromotedItems,
-  calculateTotalPrices: calculateTotalPrices
+  calculateTotalPrices: calculateTotalPrices,
+  buildReceipt: buildReceipt
 };
