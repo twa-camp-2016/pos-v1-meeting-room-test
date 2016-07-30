@@ -1,5 +1,6 @@
 'use strict';
-let {formatTags,countBarcodes,printReceipt} = require('../main/main');
+let {formatTags,countBarcodes,buildCartItems,printReceipt} = require('../main/main');
+let {loadAllItems,loadPromotions} = require('./fixtures');
 describe('pos', () => {
 
   it('#1| format the tags',()=>{
@@ -38,7 +39,7 @@ describe('pos', () => {
     expect(formattedTags).toEqual(expected);
   })
 
-  fit('#2| count the tags',()=>{
+  it('#2| count the tags',()=>{
     const formattedTags = [
       {
         barcode:'ITEM000001',
@@ -71,6 +72,41 @@ describe('pos', () => {
     ]
 
     expect(countedBarcodes).toEqual(expected);
+  })
+
+  fit('#3| build cart items',()=>{
+    const countedBarcodes =[
+      {
+        barcode:'ITEM000001',
+        count:3
+      },
+      {
+        barcode:'ITEM000003',
+        count:2.5
+      }
+    ]
+
+    const allItems = loadAllItems();
+    const cartItems = buildCartItems(countedBarcodes,allItems);
+
+    const expected = [
+      {
+        barcode:'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:3
+      },
+      {
+        barcode:'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5
+      }
+    ]
+
+    expect(cartItems).toEqual(expected);
   })
 
   it('should print text', () => {
