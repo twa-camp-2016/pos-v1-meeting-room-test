@@ -1,7 +1,9 @@
 'use strict';
 let{getFormatTags,
    getCountedItems,
-   buildCartItems
+   buildCartItems,
+  buildPromotionItems,
+  calculateTotalPrice
 }=require('../main/main');
 describe('pos', () => {
   it('it should format tags', ()=> {
@@ -183,7 +185,107 @@ describe('pos', () => {
       expect(result).toEqual(expected)
   });
 
+it('should build promoted items',()=>{
+  let input=[
+    {
+      barcode: 'ITEM000001',
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00,
+      count:5
+    },
+    {
+      barcode: 'ITEM000003',
+      name: '荔枝',
+      unit: '斤',
+      price: 15.00,
+      count:2.5
+    },
+    {
+      barcode: 'ITEM000005',
+      name: '方便面',
+      unit: '袋',
+      price: 4.50,
+      count:3
+    }
+  ];
+    let promotions=[
+      {
+        type: 'BUY_TWO_GET_ONE_FREE',
+        barcodes: [
+          'ITEM000000',
+          'ITEM000001',
+          'ITEM000005'
+        ]
+      }
+    ];
+  let expected=[
+    {
+      barcode: 'ITEM000001',
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00,
+      count:5,
+      payPrice:12.00,
+      saved:3.00
+    },
+    {
+      barcode: 'ITEM000003',
+      name: '荔枝',
+      unit: '斤',
+      price: 15.00,
+      count:2.5,
+      payPrice:37.50,
+      saved:0.00
+    },
+    {
+      barcode: 'ITEM000005',
+      name: '方便面',
+      unit: '袋',
+      price: 4.50,
+      count:3,
+      payPrice:9.00,
+      saved:4.50
+    }
+  ];
+  let result=buildPromotionItems(input,promotions);
+  expect(result).toEqual(expected)
+});
+  it('should calculate totalPayPrice',()=>{
 
+    let input=[
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5,
+        payPrice:12.00,
+        saved:3.00
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5,
+        payPrice:37.50,
+        saved:0.00
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:3,
+        payPrice:9.00,
+        saved:4.50
+      }
+    ];
+    let result=calculateTotalPrice(input);
+    let expected={ totalPayPrice: 74, totalSaved: 4.5 };
+    expect(result).toEqual(expected)
+  });
 
   it('should print text', () => {
 

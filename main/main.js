@@ -50,8 +50,33 @@ function buildCartItems(getCountedItems,allItems){
   });
 }
 
+function buildPromotionItems(cartItems,promotions){
+  let currentPromotions=promotions[0];
+   return cartItems.map(cartItem=>{
+     let hasPromoted=currentPromotions.barcodes.includes(cartItem.barcode);
+     let payPrice=cartItem.count*cartItem.price;
+     let saved=0;
+     if(hasPromoted===true){
+       let saveCount = Math.floor(cartItem.count / 3);
+        saved = cartItem.price * saveCount;
+        payPrice=payPrice-saved;
+     }
+     return{
+       barcode:cartItem.barcode,
+       name: cartItem.name,
+       unit: cartItem.unit,
+       price: cartItem.price,
+       count:cartItem.count,
+       payPrice,
+       saved
+     }
+   });
+}
 module.exports = {
   getFormatTags:getFormatTags,
   getCountedItems:getCountedItems,
-  buildCartItems:buildCartItems
+  buildCartItems:buildCartItems,
+  buildPromotionItems:buildPromotionItems,
+  calculateTotalPrice:calculateTotalPrice
+
 };
