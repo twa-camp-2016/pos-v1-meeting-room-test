@@ -3,9 +3,10 @@ let {
   printReceipt,
   formatedItem,
   countBarcode,
-  buildCartItems
+  buildCartItems,
+  buildPromotedItems,
 } = require("../main/main.js");
-let {loadAllItems,loadPromotions} = require("../spec/fixtures");
+let {loadAllItems, loadPromotions} = require("../spec/fixtures");
 
 describe('pos', () => {
   it('#1', () => {
@@ -45,22 +46,44 @@ describe('pos', () => {
 
     let countedBarcodes = countBarcode(formattedItems);
 
-    let expected = [{barcode: 'ITEM000001', count: 5}, {barcode: 'ITEM000003', count: 2.5}, {barcode: 'ITEM000005', count: 3}];
+    let expected = [{barcode: 'ITEM000001', count: 5}, {barcode: 'ITEM000003', count: 2.5}, {
+      barcode: 'ITEM000005',
+      count: 3
+    }];
 
     expect(countedBarcodes).toEqual(expected);
   });
 
-  it('#3', () =>{
-    let countedBarcodes = [{barcode: 'ITEM000001', count: 5}, {barcode: 'ITEM000003', count: 2.5}, {barcode: 'ITEM000005', count: 3}];
+  it('#3', () => {
+    let countedBarcodes = [{barcode: 'ITEM000001', count: 5}, {
+      barcode: 'ITEM000003',
+      count: 2.5
+    }, {barcode: 'ITEM000005', count: 3}];
 
     let allItems = loadAllItems();
-    let  cartItems = buildCartItems(countedBarcodes,allItems);
+    let cartItems = buildCartItems(countedBarcodes, allItems);
 
-    let expected = [{barcode: 'ITEM000001', count: 5,name: '雪碧',unit: '瓶',price: 3.00 },
-                    {barcode: 'ITEM000003', count: 2.5,name: '荔枝',unit: '斤',price: 15.00},
-                    {barcode: 'ITEM000005', count: 3,name: '方便面',unit: '袋',price: 4.50}];
+    let expected = [{barcode: 'ITEM000001', count: 5, name: '雪碧', unit: '瓶', price: 3.00},
+      {barcode: 'ITEM000003', count: 2.5, name: '荔枝', unit: '斤', price: 15.00},
+      {barcode: 'ITEM000005', count: 3, name: '方便面', unit: '袋', price: 4.50}];
 
     expect(cartItems).toEqual(expected);
+  });
+
+  it('#4', () => {
+    let cartItems = [{barcode: 'ITEM000001', count: 5, name: '雪碧', unit: '瓶', price: 3.00},
+                     {barcode: 'ITEM000003', count: 2.5, name: '荔枝', unit: '斤', price: 15.00},
+                     {barcode: 'ITEM000005', count: 3, name: '方便面', unit: '袋', price: 4.50}];
+
+    let promotions = loadPromotions();
+    let promotedItems = buildPromotedItems(cartItems, promotions);
+
+    let expected = [{barcode: 'ITEM000001', count: 5, name: '雪碧', unit: '瓶', price: 3.00,saved:3.00,payPrice:12.00},
+      {barcode: 'ITEM000003', count: 2.5, name: '荔枝', unit: '斤', price: 15.00, saved:0, payPrice:37.50},
+      {barcode: 'ITEM000005', count: 3, name: '方便面', unit: '袋', price: 4.50, saved:4.50, payPrice:9.00}];
+
+     expect(promotedItems).toEqual(expected);
+
   });
 
 
