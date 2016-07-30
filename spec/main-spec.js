@@ -1,5 +1,5 @@
 'use strict';
-
+let main = require('../main/main')
 describe('pos', () => {
 
   it('should print text', () => {
@@ -30,4 +30,34 @@ describe('pos', () => {
 
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
+
+  it('should format tags' ,() => {
+    const tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+
+    let formattedTags = main.getFormatedTags(tags);
+
+    let expected = [{
+      barcode: 'ITEM000001',
+      count:1
+    },{
+      barcode: 'ITEM000001',
+      count:1
+    },{
+      barcode: 'ITEM000003',
+      count:2.5
+    },{
+      barcode: 'ITEM000005',
+      count:1
+    },{
+      barcode: 'ITEM000005',
+      count:2
+    }];
+    expect(formattedTags).toEqual(expected);
+  })
 });
