@@ -1,9 +1,10 @@
 'use strict';
 let main = require('../main/main');
+let {loadAllItems, loadPromotions} = require('./fixtures');
 
 describe('pos', () => {
 
-  fit('#1.formatTags', () => {
+  it('#1.formatTags', () => {
 
     let tags = [
       'ITEM000001',
@@ -14,7 +15,7 @@ describe('pos', () => {
 
     let formattedTags = main.formatTags(tags);
 
-    const expectFormattedTags = [
+    const expected = [
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
@@ -22,12 +23,64 @@ describe('pos', () => {
     ];
 
 
-    expect(formattedTags).toEqual(expectFormattedTags);
+    expect(formattedTags).toEqual(expected);
+
+  });
+
+  it('#2.countBarcodes', () => {
+
+    let formattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    let countedBarcodes = main.countBarcodes(formattedTags);
+
+    const expected = [
+
+      {barcode: 'ITEM000001', count: 3},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    expect(countedBarcodes).toEqual(expected);
+
+  });
+  it('#3.buildCartItems', () => {
+    let countedBarcodes = [
+
+      {barcode: 'ITEM000001', count: 3},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+    let allItems = loadAllItems();
+
+    let cartItems = main.buildCartItems(countedBarcodes, allItems);
+
+    const expectCartItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2
+      }
+    ];
+
+    expect(cartItems).toEqual(expectCartItems);
 
   });
 
 
-  it('should print text', () => {
+  xit('should print text', () => {
 
     const tags = [
       'ITEM000001',

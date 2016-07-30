@@ -15,7 +15,44 @@ function formatTags(tags) {
   });
 }
 
+//#2
+function _getExistElementByBarcode(barcode, array) {
+  return array.find((countItem) => {
+    return barcode === countItem.barcode;
+  });
+}
+
+function countBarcodes(formattedTags) {
+  let result = [];
+  formattedTags.forEach((formattedTag) => {
+    let countItem = _getExistElementByBarcode(formattedTag.barcode, result);
+    if (countItem === undefined) {
+      result.push({barcode: formattedTag.barcode, count: formattedTag.count})
+    } else {
+      countItem.count += formattedTag.count;
+    }
+  });
+  return result;
+}
+
+
+//#3
+function buildCartItems(countedBarcodes, allItems) {
+  return countedBarcodes.map((countedBarcode) => {
+    let {name, unit, price} = _getExistElementByBarcode(countedBarcode.barcode, allItems);
+    return {
+      barcode: countedBarcode.barcode,
+      name,
+      unit,
+      price,
+      count: countedBarcode.count
+    };
+  });
+}
+
 
 module.exports = {
-  formatTags
+  formatTags,
+  countBarcodes,
+  buildCartItems
 };
