@@ -74,10 +74,33 @@ function buildPromotedItems(cartItems, promotions) {
   });
 }
 
+//#5
+function calculateToTalPrices(promotedItems) {
+  let totalPrice = _.sumBy(promotedItems, 'payPrice');
+  let totalSaved = _.sumBy(promotedItems, 'saved');
+  return {
+    totalPrice,
+    totalSaved
+  };
+}
+
+
+//#6
+function buildReceipt(promotedItems, totalPrices) {
+  let receiptItems = promotedItems.map((promotedItem) =);
+
+  return {
+
+  };
+
+}
+
 
 module.exports = {
   formatTags,
   countBarcodes,
   buildCartItems,
-  buildPromotedItems
+  buildPromotedItems,
+  calculateToTalPrices,
+  buildReceipt
 };

@@ -123,6 +123,91 @@ describe('pos', () => {
     expect(promotedItems).toEqual(expected)
   });
 
+  it('#5.calculateToTalPrices', () => {
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+
+    let totalPrices = main.calculateToTalPrices(promotedItems);
+
+    let expected = {
+      totalPrice: 36,
+      totalSaved: 3
+    };
+    expect(totalPrices).toEqual(expected);
+
+  });
+
+
+  it('#6.buildReceipt', () => {
+    let totalPrices = {
+      totalPrice: 36,
+      totalSaved: 3
+    };
+    let promotedItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 3,
+        payPrice: 6,
+        saved: 3
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        payPrice: 30,
+        saved: 0
+      }
+    ];
+    let receipt = main.buildReceipt(promotedItems,totalPrices);
+    const expected = {
+      receiptItems: [
+        {
+          barcode: 'ITEM000001',
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00,
+          count: 3,
+          payPrice: 6,
+          saved: 3
+        },
+        {
+          barcode: 'ITEM000003',
+          name: '荔枝',
+          unit: '斤',
+          price: 15.00,
+          count: 2,
+          payPrice: 30,
+          saved: 0
+        }],
+      totalPrice: 36,
+      totalSaved: 3
+    };
+    expect(receipt).toEqual(expected);
+
+  });
 
   xit('should print text', () => {
 
