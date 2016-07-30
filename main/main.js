@@ -54,16 +54,10 @@ function buildPromotedItems(cartItems, promotions) {
   let currentPromotion = promotions[0];
   return cartItems.map((cartItem) => {
     let saved = 0;
-    let hasPromoted = false;
-    currentPromotion.barcodes.forEach((barcode) => {
-      if (cartItem.barcode === barcode) {
-        hasPromoted = true;
-      }
-    });
-
-    if (currentPromotion.type === 'BUY_TWO_GET_ONE_FREE' && hasPromoted) {
-      var savedCount = Math.floor(cartItem.count / 3);
-      saved = cartItem.price * savedCount;
+    let hasPromoted = currentPromotion.barcodes.includes(cartItem.barcode);
+    if (hasPromoted && currentPromotion.type === 'BUY_TWO_GET_ONE_FREE') {
+      let savedCount = Math.floor(cartItem.count / 3);
+      saved = savedCount * cartItem.price;
     }
     let payPrice = cartItem.count * cartItem.price - saved;
 
@@ -79,30 +73,17 @@ function buildPromotedItems(cartItems, promotions) {
   });
 }
 
+
 //#5
 function calculateTotalPrices(promotedItems) {
-  let result = {
-    totalPayPrice: 0,
-    totalSaved: 0
+  let totalPayPrice = _.sumBy(promotedItems, 'payPrice');
+  let totalSaved = _.sumBy(promotedItems, 'saved');
+  return {
+    totalPayPrice,
+    totalSaved
   };
-
-  for (let promotedItem of promotedItems) {
-    result.totalPayPrice += promotedItem.payPrice;
-    result.totalSaved += promotedItem.saved;
-  }
-  return result;
 }
-//#5
-// function calculateTotalPrices(promotedItems) {
-//   let totalPrice = _.sumBy(promotedItems, 'payPrice');
-//   let totalSaved = _.sumBy(promotedItems, 'saved');
-//   return {
-//     totalPrice,
-//     totalSaved
-//   };
-// }
 
-//
 
 //#6
 function buildReceipt(promotedItems, totalPrices) {
