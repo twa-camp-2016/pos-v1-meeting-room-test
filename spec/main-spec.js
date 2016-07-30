@@ -1,6 +1,31 @@
 'use strict';
+let main = require('../main/main');
 
 describe('pos', () => {
+
+  fit('#1.formatTags', () => {
+
+    let tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2'
+    ];
+
+    let formattedTags = main.formatTags(tags);
+
+    const expectFormattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2}
+    ];
+
+
+    expect(formattedTags).toEqual(expectFormattedTags);
+
+  });
+
 
   it('should print text', () => {
 
