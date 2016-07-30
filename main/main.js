@@ -1,5 +1,4 @@
 
-
 'use strict';
 
 function buildFormattedBarcode(input){
@@ -12,10 +11,30 @@ function buildFormattedBarcode(input){
     }
   })
 }
-function buildCountedBarcode(input){
-  
+
+function buildCountedBarcode(formattedBarcodes){
+  return formattedBarcodes.reduce((result,formmatedItem)=>{
+    let found = result.find((item)=>item.barcode===formmatedItem.barcode);
+    if(found){
+      found.count+=formmatedItem.count;
+    }else{
+      result.push(formmatedItem);
+    }
+    return result;
+  },[])
+}
+function buildCartBarcode(countedItems,allItems){
+  return countedItems.map((barcode,count)=>{
+    console.log(allItems);
+    let found = allItems.find((item)=>item.barcode===barcode);
+    console.log(found);
+    // return {barcode,name,unit,price,count}
+    return {barcode,name:found.name,unit:found.unit,price:found.price,count}
+  })
 }
 
 module.exports = {
-  buildFormattedBarcode
+  buildFormattedBarcode,
+  buildCountedBarcode,
+  buildCartBarcode
 }

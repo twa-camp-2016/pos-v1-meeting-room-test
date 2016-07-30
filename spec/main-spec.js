@@ -1,6 +1,6 @@
 'use strict';
-let {buildFormattedBarcode}=require('../main/main');
-
+let {buildFormattedBarcode,buildCountedBarcode,buildCartBarcode}=require('../main/main');
+let {loadAllItems,loadPromotions} = require('./fixtures');
 describe('pos', () => {
 
   it('buildFormattedBarcode', function () {
@@ -30,6 +30,7 @@ describe('pos', () => {
     ];
     expect(result).toEqual(expectItem);
   });
+
   it('buildCountedBarcode',function(){
     let input =[
       {barcode: 'ITEM000001', count: 1},
@@ -50,6 +51,41 @@ describe('pos', () => {
     ];
     expect(result).toEqual(expectItem);
   });
+
+  fit('buildCartedBarcode',function(){
+    let input = [
+      {barcode: 'ITEM000001', count: 5},
+      {barcode: 'ITEM000003', count: 2},
+      {barcode: 'ITEM000005', count: 3},
+    ];
+    let allItems = loadAllItems();
+    let result=buildCartBarcode(input,allItems);
+    let expectItem = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count :3
+      }
+    ];
+    expect(result).toEqual(expectItem);
+  });
+
 
   it('should print text', () => {
 
