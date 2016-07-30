@@ -1,5 +1,5 @@
 'use strict';
-let {formatCartCount,getCartCounts,loadAllItems,buildAllItems,promotionItems,builtPromotedItems}=require('../main/main.js');
+let {formatCartCount,getCartCounts,loadAllItems,buildAllItems,promotionItems,builtPromotedItems,calculateTotalPrice,builtReceipt}=require('../main/main.js');
 describe('pos', () => {
 
   it('should print cart counts',()=>{
@@ -111,6 +111,86 @@ describe('pos', () => {
         payPrices: 13.5,
         savePrices: 0 } ];
     expect(getItems).toEqual(printItems);
+  });
+
+
+
+  it('should print cart items',()=>{
+    const inputs=[ { barcode: 'ITEM000001',
+      name: '雪碧',
+      count: 5,
+      unit: '瓶',
+      price: 3,
+      payPrices: 12,
+      savePrices: 3 },
+      { barcode: 'ITEM000003',
+        name: '荔枝',
+        count: 2.5,
+        unit: '斤',
+        price: 15,
+        payPrices: 37.5,
+        savePrices: 0 },
+      { barcode: 'ITEM000005',
+        name: '方便面',
+        count: 3,
+        unit: '袋',
+        price: 4.5,
+        payPrices: 13.5,
+        savePrices: 0 } ];
+    let getPrice=calculateTotalPrice(inputs);
+    let printItems={ totalPayPrice: 63, totalSavePrice: 3 };
+    expect(getPrice).toEqual(printItems);
+  });
+
+
+
+
+  it('should print cart items',()=>{
+    const inputs=[ { barcode: 'ITEM000001',
+      name: '雪碧',
+      count: 5,
+      unit: '瓶',
+      price: 3,
+      payPrices: 12,
+      savePrices: 3 },
+      { barcode: 'ITEM000003',
+        name: '荔枝',
+        count: 2.5,
+        unit: '斤',
+        price: 15,
+        payPrices: 37.5,
+        savePrices: 0 },
+      { barcode: 'ITEM000005',
+        name: '方便面',
+        count: 3,
+        unit: '袋',
+        price: 4.5,
+        payPrices: 13.5,
+        savePrices: 0 } ];
+    let input={ totalPayPrice: 63, totalSavePrice: 3 };
+    let getReceipt=builtReceipt(inputs,input);
+    let printItems={ promotedItems:
+      [ { name: '雪碧',
+        unit: '瓶',
+        price: 3,
+        count: 5,
+        payPrices: 12,
+        savePrices: 3 },
+        { name: '荔枝',
+          unit: '斤',
+          price: 15,
+          count: 2.5,
+          payPrices: 37.5,
+          savePrices: 0 },
+        { name: '方便面',
+          unit: '袋',
+          price: 4.5,
+          count: 3,
+          payPrices: 13.5,
+          savePrices: 0 } ],
+      totalPayPrice: 63,
+      totalSavePrice: 3 };
+    expect(getReceipt).toEqual(printItems);
   });
 
 

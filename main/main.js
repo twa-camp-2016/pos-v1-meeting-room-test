@@ -122,11 +122,36 @@ return result;
 //console.log(result);
 }
 
-function getSumPrice(promotionCartItems){
-  let savedMoney=_.filter(promotionCartItems,x=>{return x.payPrices});
-  console.log(savedMoney);
-  _.reduce()
+function calculateTotalPrice(builtedPromtedItems){
+  let a= _.reduce(builtedPromtedItems,(result,{payPrices,savePrices})=>
+    {
+      result.totalPayPrice+=payPrices;
+      result.totalSavePrice+=savePrices;
+      return result;
+    },{totalPayPrice:0,totalSavePrice:0}
+  );
+  //console.log(a);
+  return a;
 }
+function builtReceipt(builtedPromtedItems,calculateItems) {
+  let a= {
+    promotedItems: _.map(builtedPromtedItems,({name, unit, price, count, payPrices, savePrices})=> {
+      return {name, unit, price, count, payPrices, savePrices};
+    }),
+    totalPayPrice:calculateItems.totalPayPrice,
+    totalSavePrice:calculateItems.totalSavePrice
+  };
+  //console.log(a);
+  return a;
+}
+
+function builtNotes(buildReceipt){
+  let lines=['***<没钱赚商店>收据***'];
+  for(let item of buildReceipt.promotedItems)
+
+}
+
+
 
 function Receipt(tags) {
   let formattedCounts = formatCartCount(tags);
@@ -134,8 +159,9 @@ function Receipt(tags) {
   let allItems=loadAllItems();
   let builtedCartItems=buildAllItems(cartCount,allItems);
   let promottedItems=promotionItems();
-  let promotionCartItems=builtPromotedItems(builtedCartItems,promottedItems)
-  getSumPrice(promotionCartItems);
+  let builtedPromtedItems=builtPromotedItems(builtedCartItems,promottedItems);
+  let calculateItems=calculateTotalPrice(builtedPromtedItems);
+  let buildReceipt=builtReceipt(builtedPromtedItems,calculateItems)
 }
 
 Receipt(tags);
@@ -146,7 +172,9 @@ module.exports = {
   loadAllItems:loadAllItems,
   buildAllItems:buildAllItems,
   promotionItems:promotionItems,
-  builtPromotedItems:builtPromotedItems
+  builtPromotedItems:builtPromotedItems,
+  calculateTotalPrice:calculateTotalPrice,
+  builtReceipt:builtReceipt
 };
 
 
