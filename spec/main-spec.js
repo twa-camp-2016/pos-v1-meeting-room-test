@@ -1,10 +1,15 @@
 'use strict';
 let {
   printReceipt,
-  getCartItems
+  getCartItems,
+  getReceiptItems,
+  getTotalItems
 } = require('../main/main');
 
-let loadAllItems = require('../spec/fixtures');
+let {
+  loadAllItems,
+  loadPromotions
+} = require('../spec/fixtures');
 describe('pos', () => {
 
   it('should print text', () => {
@@ -36,7 +41,7 @@ describe('pos', () => {
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 
-  it('获得商品信息',() => {
+  it('获得商品信息', () => {
     const tags = [
       'ITEM000001',
       'ITEM000001',
@@ -48,40 +53,167 @@ describe('pos', () => {
       'ITEM000005-2',
     ];
     const allItems = loadAllItems();
-    const cartItems = getCartItems(tags,allItems);
+    const cartItems = getCartItems(tags, allItems);
 
     const expectText = [
       {
-        item:{
+        item: {
           barcode: 'ITEM000001',
           name: '雪碧',
           unit: '瓶',
           price: 3.00
         },
-        count:5
+        count: 5
       },
       {
-        item:{
+        item: {
           barcode: 'ITEM000003',
           name: '荔枝',
           unit: '斤',
           price: 15.00
         },
-        count:2.5
+        count: 2.5
       },
       {
-        item:{
+        item: {
           barcode: 'ITEM000005',
           name: '方便面',
           unit: '袋',
           price: 4.50
         },
-        count:3
+        count: 3
       }
     ];
 
     expect(cartItems).toEqual(expectText);
   });
 
-  it('')
+  it('获得小计和优惠', () => {
+    const cartItems = [
+      {
+        item: {
+          barcode: 'ITEM000001',
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00
+        },
+        count: 5
+      },
+      {
+        item: {
+          barcode: 'ITEM000003',
+          name: '荔枝',
+          unit: '斤',
+          price: 15.00
+        },
+        count: 2.5
+      },
+      {
+        item: {
+          barcode: 'ITEM000005',
+          name: '方便面',
+          unit: '袋',
+          price: 4.50
+        },
+        count: 3
+      }
+    ];
+    const allPromotions = loadPromotions();
+    const receiptItems = getReceiptItems(cartItems, allPromotions);
+
+    const expectText = [
+      {
+        cartItem: {
+          item: {
+            barcode: 'ITEM000001',
+            name: '雪碧',
+            unit: '瓶',
+            price: 3.00
+          },
+          count: 5
+        },
+        subtotal: 12.00,
+        save: 3.00
+      },
+      {
+        cartItem:{
+
+        item: {
+          barcode: 'ITEM000003',
+          name: '荔枝',
+          unit: '斤',
+          price: 15.00
+        },
+        count: 2.5
+        },
+        subtotal:37.50,
+        save:0
+      },
+      {
+        cartItem:{
+          item: {
+            barcode: 'ITEM000005',
+            name: '方便面',
+            unit: '袋',
+            price: 4.50
+          },
+          count: 3
+        },
+        subtotal:9.00,
+        save:4.5
+      }
+    ];
+    expect(receiptItems).toEqual(expectText);
+  });
+
+  it('获得总计和节省',() => {
+    const receiptItems = [
+      {
+        cartItem: {
+          item: {
+            barcode: 'ITEM000001',
+            name: '雪碧',
+            unit: '瓶',
+            price: 3.00
+          },
+          count: 5
+        },
+        subtotal: 12.00,
+        save: 3.00
+      },
+      {
+        cartItem:{
+
+          item: {
+            barcode: 'ITEM000003',
+            name: '荔枝',
+            unit: '斤',
+            price: 15.00
+          },
+          count: 2.5
+        },
+        subtotal:37.50,
+        save:0
+      },
+      {
+        cartItem:{
+          item: {
+            barcode: 'ITEM000005',
+            name: '方便面',
+            unit: '袋',
+            price: 4.50
+          },
+          count: 3
+        },
+        subtotal:9.00,
+        save:4.5
+      }
+    ];
+    const totalSaves = getTotalItems(receiptItems);
+
+    const expectText = {total:58.50,saves:7.50};
+    expect(totalSaves).toEqual(expectText);
+  });
+
+  it('获得小票',())
 });
