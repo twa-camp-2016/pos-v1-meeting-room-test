@@ -42,8 +42,20 @@ function buildCartItems(countedBarcodes, allItems) {
   );
 }
 
+function buildPromotedItems(cartItems,promotions) {
+  let currentPromoted = _.find((promotions),promotion => promotion.type === 'BUY_TWO_GET_ONE_FREE');
+  return _.map((cartItems),cartItem => {
+    let hasPromotion = currentPromoted.barcodes.includes(cartItem.barcode) && cartItem.count > 2;
+    let savedCount = _.floor(cartItem.count/3);
+    let saved = hasPromotion ? savedCount*cartItem.price : 0;
+    let payPrice = cartItem.count * cartItem.price - saved;
+    return Object.assign({},cartItem,{saved,payPrice})
+  });
+}
+
 module.exports = {
   formatTags: formatTags,
   countBarcodes: countBarcodes,
-  buildCartItems: buildCartItems
+  buildCartItems: buildCartItems,
+  buildPromotedItems: buildPromotedItems
 };

@@ -1,4 +1,4 @@
-let {formatTags,countBarcodes,buildCartItems} = require('../main/main.js');
+let {formatTags,countBarcodes,buildCartItems,buildPromotedItems} = require('../main/main.js');
 let {loadAllItems, loadPromotions} = require('../spec/fixtures.js');
 
 
@@ -108,6 +108,64 @@ describe('pos', () => {
     ];
     let cartItems = buildCartItems(countedBarcodes,allItems);
     expect(cartItems).toEqual(expected);
+  });
+
+  it('buildPromotedItems',function () {
+    let cartItems = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        count: 3,
+        price: 3.00
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        count: 2.5,
+        price: 15.00
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        count: 3,
+        price: 4.50
+      }
+    ];
+    let expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        count: 3,
+        price: 3.00,
+        saved: 3.00,
+        payPrice: 6.00
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        count: 2.5,
+        price: 15.00,
+        saved: 0,
+        payPrice: 37.50
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        count: 3,
+        price: 4.50,
+        saved: 4.50,
+        payPrice: 9.00
+      }
+    ];
+    let promotions = loadPromotions();
+    let promotedItems = buildPromotedItems(cartItems,promotions);
+    expect(promotedItems).toEqual(expected);
   });
 
   xit('should print text', () => {
