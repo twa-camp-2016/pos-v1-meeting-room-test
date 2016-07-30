@@ -123,7 +123,7 @@ describe('pos', () => {
     expect(promotedItems).toEqual(expected)
   });
 
-  it('#5.calculateToTalPrices', () => {
+  it('#5.calculateTotalPrices', () => {
     let promotedItems = [
       {
         barcode: 'ITEM000001',
@@ -145,13 +145,15 @@ describe('pos', () => {
       }
     ];
 
-    let totalPrices = main.calculateToTalPrices(promotedItems);
+    let totalPrices = main.calculateTotalPrices(promotedItems);
 
-    let expected = {
-      totalPrice: 36,
+    const expectTotalPrices =
+    {
+      totalPayPrice: 36,
       totalSaved: 3
     };
-    expect(totalPrices).toEqual(expected);
+
+    expect(totalPrices).toEqual(expectTotalPrices);
 
   });
 
@@ -210,7 +212,8 @@ describe('pos', () => {
 
   });
 
-  xit('should print text', () => {
+
+  it('should print text', () => {
 
     const tags = [
       'ITEM000001',
@@ -225,7 +228,7 @@ describe('pos', () => {
 
     spyOn(console, 'log');
 
-    printReceipt(tags);
+    main.printReceipt(tags);
 
     const expectText = `***<没钱赚商店>收据***
 名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
