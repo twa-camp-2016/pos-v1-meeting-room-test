@@ -1,4 +1,4 @@
-let {formatTags,countBarcodes} = require('../main/main.js');
+let {formatTags,countBarcodes,buildCartItems} = require('../main/main.js');
 let {loadAllItems, loadPromotions} = require('../spec/fixtures.js');
 
 
@@ -65,6 +65,49 @@ describe('pos', () => {
     ];
     let countedBarcode = countBarcodes(formattedTags);
     expect(countedBarcode).toEqual(expected);
+  });
+
+  it('buildCartItems',function () {
+    let countedBarcodes = [
+      {
+        barcode: 'ITEM000001',
+        count: 2
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      },
+    ];
+    let allItems = loadAllItems();
+    let expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        count: 2,
+        price: 3.00
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        count: 2.5,
+        price: 15.00
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        count: 2,
+        price: 4.50
+      }
+    ];
+    let cartItems = buildCartItems(countedBarcodes,allItems);
+    expect(cartItems).toEqual(expected);
   });
 
   xit('should print text', () => {

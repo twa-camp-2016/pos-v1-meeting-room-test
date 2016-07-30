@@ -4,37 +4,46 @@ let {loadAllItems} = require('../spec/fixtures.js');
 let {loadPromotions} = require('../spec/fixtures.js');
 
 function formatTags(tags) {
-  return _.map(tags,tag =>{
-    if(tag.includes('-')){
+  return _.map(tags, tag => {
+    if (tag.includes('-')) {
       let [barcode,count] = tag.split('-');
       return {
-        barcode,count: parseFloat(count)
+        barcode, count: parseFloat(count)
       }
     }
-    else{
-      return {barcode: tag,count: 1}
+    else {
+      return {barcode: tag, count: 1}
     }
   });
 }
 
-function _getExitElementByBarcodes(array,barcode) {
+function _getExitElementByBarcodes(array, barcode) {
   return _(array).find(element => element.barcode === barcode);
 }
 
 function countBarcodes(formattedTags) {
-  return _(formattedTags).reduce((result,formattedTag) => {
-    let found = _getExitElementByBarcodes(result,formattedTag.barcode);
-    if(found){
+  return _(formattedTags).reduce((result, formattedTag) => {
+    let found = _getExitElementByBarcodes(result, formattedTag.barcode);
+    if (found) {
       found.count += formattedTag.count;
     }
-    else{
+    else {
       result.push(formattedTag);
     }
     return result;
-  },[]);
+  }, []);
+}
+
+function buildCartItems(countedBarcodes, allItems) {
+  return _.map(countedBarcodes,({barcode, count}) => {
+      let {name, unit, price} = _getExitElementByBarcodes(allItems, barcode);
+      return {barcode, name, unit, count, price};
+    }
+  );
 }
 
 module.exports = {
-  formatTags:formatTags,
-  countBarcodes:countBarcodes
+  formatTags: formatTags,
+  countBarcodes: countBarcodes,
+  buildCartItems: buildCartItems
 };
