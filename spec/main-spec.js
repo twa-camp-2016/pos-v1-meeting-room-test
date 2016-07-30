@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags,getCount}=require('../main/main');
+let {getFormattedTags, getCount,loadAllItems,getCartItems}=require('../main/main');
 describe('pos', () => {
   it('getFormattedTags', function () {
     let tags = ['ITEM000001', 'ITEM000001', 'ITEM000003-2.5'];
@@ -10,23 +10,29 @@ describe('pos', () => {
       {barcode: 'ITEM000003', count: 2.5}]
     expect(formattedTags).toEqual(expected);
   });
-  it('getCount',function () {
+  it('getCount', function () {
     let formattedTags = [
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000003', count: 2.5}];
     let countBarcodes = getCount(formattedTags);
-    let expected =[
+    let expected = [
       {barcode: 'ITEM000001', count: 2},
       {barcode: 'ITEM000003', count: 2.5}];
     expect(countBarcodes).toEqual(expected);
   });
-  it('getCartItems',function () {
+  it('getCartItems', function () {
     let countBarcodes = [
       {barcode: 'ITEM000001', count: 2},
       {barcode: 'ITEM000003', count: 2.5}];
-    let cartItems = getCartItems()
+    let allItems = loadAllItems();
+    let cartItems = getCartItems(allItems, countBarcodes);
+    let expected = [
+      {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 2},
+      {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5}];
+    expect(cartItems).toEqual(expected);
   });
+  it()
 // it('should print text', () => {
 //
 //   const tags = [
