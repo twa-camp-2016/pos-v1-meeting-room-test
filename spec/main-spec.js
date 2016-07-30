@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags,getCountedItems}=require('../main/main.js');
+let {getFormattedTags,getCountedItems,loadAllItems,buildCartItems}=require('../main/main.js');
 describe('pos', () => {
 
   it('should format tags', () => {
@@ -45,6 +45,42 @@ describe('pos', () => {
     expect(countedItems).toEqual(expectText);
   });
 
+  it('should build cart items', () => {
+
+    let countedItems =   [
+      {barcode:'ITEM000001',count:2},
+      {barcode:'ITEM000003',count:2.5},
+      {barcode:'ITEM000005',count:3}
+    ];
+    let allItems=loadAllItems();
+    let cartItems=buildCartItems(countedItems,allItems);
+
+    const expectText = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:2
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:3
+      }
+    ];
+
+    expect(cartItems).toEqual(expectText);
+  });
 //   it('should print text', () => {
 //
 //     const tags = [
