@@ -1,7 +1,26 @@
 'use strict';
+let _ = require('lodash');
 
-//TODO: 请在该文件中实现练习要求并删除此注释
+function formatTags(tags) {
+  return _.chain(tags)
+    .map(tag => {
+      let temp = [];
+      if (tag.includes('-')) {
+        temp = tag.split('-');
+        return {
+          barcode: temp[0],
+          count: parseFloat(temp[1])
+        }
+      }
+
+      return {
+        barcode: tag,
+        count: 1
+      }
+    })
+    .value();
+}
 
 module.exports = {
-  
+  formatTags: formatTags
 }
