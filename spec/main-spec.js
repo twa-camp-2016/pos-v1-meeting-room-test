@@ -1,5 +1,5 @@
 'use strict';
-let {formatTags,countBarcodes,buildCartItems,buildPromotions,calculateTotalPrices,printReceipt} = require('../main/main');
+let {formatTags,countBarcodes,buildCartItems,buildPromotions,calculateTotalPrices,buildReceipt,printReceipt} = require('../main/main');
 let {loadAllItems,loadPromotions} = require('./fixtures');
 describe('pos', () => {
 
@@ -208,6 +208,79 @@ describe('pos', () => {
 
     expect(totalPrices).toEqual(expected);
 
+  })
+
+  it('#6| build receipt',()=>{
+    const promotedItems = [
+      {
+        barcode: 'ITEM000000',
+        name: '可口可乐',
+        unit: '瓶',
+        price: 3.00,
+        count:3,
+        payPrice:6,
+        saved:3
+      },
+      {
+        barcode: 'ITEM000002',
+        name: '苹果',
+        unit: '斤',
+        price: 5.50,
+        count:2.5,
+        payPrice:13.75,
+        saved:0
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:2,
+        payPrice:9,
+        saved:0
+      }
+    ];
+
+    const totalPrices = {
+      totalPayPrice:28.75,
+      totalSaved:3
+    };
+
+    const receipt = buildReceipt(promotedItems,totalPrices);
+
+    const expected ={
+      receiptItems:[
+        {
+          name: '可口可乐',
+          unit: '瓶',
+          price: 3.00,
+          count:3,
+          payPrice:6,
+          saved:3
+        },
+        {
+          name: '苹果',
+          unit: '斤',
+          price: 5.50,
+          count:2.5,
+          payPrice:13.75,
+          saved:0
+        },
+        {
+          name: '方便面',
+          unit: '袋',
+          price: 4.50,
+          count:2,
+          payPrice:9,
+          saved:0
+        }
+      ],
+
+      totalPayPrice:28.75,
+      totalSaved:3
+    };
+
+    expect(receipt).toEqual(expected);
   })
 
   it('should print text', () => {

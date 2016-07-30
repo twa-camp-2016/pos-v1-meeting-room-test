@@ -8,6 +8,8 @@ function printReceipt(tags) {
   let cartItems = buildCartItems(countedBarcodes,allItems);
   let promotions = loadPromotions();
   let promotedItems = buildPromotions(cartItems,promotions);
+  let totalPrices = calculateTotalPrices(promotedItems);
+  let receipt = buildReceipt(promotedItems,totalPrices);
 }
 
 function formatTags(tags) {
@@ -85,11 +87,23 @@ function calculateTotalPrices(promotedItems) {
     totalSaved:_.sumBy(promotedItems,'saved')
   };
 }
+
+function buildReceipt(promotedItems, {totalPayPrice,totalSaved}) {
+  return {
+    receiptItems:promotedItems.map(({name,unit,price,count,payPrice,saved})=>{
+      return {name,unit,price,count,payPrice,saved};
+    }),
+    totalPayPrice,
+    totalSaved
+  }
+}
+
 module.exports = {
   formatTags,
   countBarcodes,
   buildCartItems,
   buildPromotions,
   calculateTotalPrices,
+  buildReceipt,
   printReceipt
 }
