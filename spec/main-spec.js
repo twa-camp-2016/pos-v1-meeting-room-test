@@ -4,8 +4,11 @@
 let {
   formatTags,
   countItmes,
+  buildItems,
+  loadAllItems,
 }
   = require('../main/main');
+
 
 describe('pos', () => {
 
@@ -116,6 +119,53 @@ describe('pos', () => {
 
     expect(countedItems).toEqual(expected);
 
+  });
+
+  it('should buildItems', () =>{
+    const countedItems = [
+      {
+        barcode: 'ITEM000001',
+        count: 5
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 3
+      }
+    ];
+
+    let allItems = loadAllItems();
+
+    let buildedItems = buildItems(countedItems, allItems);
+
+    const expected = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 5
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count: 3
+      }
+    ];
+
+    expect(buildedItems).toEqual(expected)
   });
 
 //   it('should print text', () => {
