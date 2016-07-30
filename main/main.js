@@ -63,10 +63,15 @@ function calculateTotalPrice(promotedItems) {
   return {totalPayPrice,totalSaved};
 }
 
+function buildReceipt(promotedItems,totalPrice) {
+  return Object.assign({receiptItems:promotedItems},totalPrice);
+}
+
 module.exports = {
   formatTags: formatTags,
   countBarcodes: countBarcodes,
   buildCartItems: buildCartItems,
   buildPromotedItems: buildPromotedItems,
-  calculateTotalPrice: calculateTotalPrice
+  calculateTotalPrice: calculateTotalPrice,
+  buildReceipt: buildReceipt
 };
