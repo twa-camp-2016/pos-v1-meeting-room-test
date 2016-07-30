@@ -79,15 +79,63 @@ function buildAllItems(cartCount,allItems){
 return a;
   //console.log(a);
 }
+function promotionItems(){
+  return [
+    {
+      type: 'BUY_TWO_GET_ONE_FREE',
+      barcodes: [
+        'ITEM000000',
+        'ITEM000001'
+      ]
+    },
+    {
+      type: 'OTHER_PROMOTION',
+      barcodes: [
+        'ITEM000003',
+        'ITEM000004'
+      ]
+    }
+  ];
+}
 
 
+function builtPromotedItems(builtedCartItems,promottedItems){
+  let currentPromotion=_.find(promottedItems,(promotion)=>promotion.type==='BUY_TWO_GET_ONE_FREE');
+  let a= _.map(builtedCartItems,(cartItems)=> {
+    let hasPromoted = currentPromotion.barcodes.includes(cartItems.barcode);
+    let saveCount = Math.floor(cartItems.count / 3);
+    //let savePrice=saveCount*cartItems.price;
+    let totalPrice = cartItems.count * cartItems.price;
+    let savePrice = hasPromoted ? cartItems.price * saveCount : 0;
+    let payPrice = totalPrice - savePrice;
+    //console.log(_fixPrice(savePrice));
+    // console.log(payPrice);
+    //console.log(Object.assign({}, cartItems, {payPrices: payPrice, savePrices: savePrice}));
+    return _.assign({}, cartItems, {payPrices: payPrice, savePrices: savePrice});
+  });
+  let result=[];
+  for(let element of a)
+  {
+    result.push(element);
+  }
+return result;
+//console.log(result);
+}
+
+function getSumPrice(promotionCartItems){
+  let savedMoney=_.filter(promotionCartItems,x=>{return x.payPrices});
+  console.log(savedMoney);
+  _.reduce()
+}
 
 function Receipt(tags) {
   let formattedCounts = formatCartCount(tags);
   let cartCount = getCartCounts(formattedCounts);
   let allItems=loadAllItems();
-  let allCartItems=buildAllItems(cartCount,allItems)
-
+  let builtedCartItems=buildAllItems(cartCount,allItems);
+  let promottedItems=promotionItems();
+  let promotionCartItems=builtPromotedItems(builtedCartItems,promottedItems)
+  getSumPrice(promotionCartItems);
 }
 
 Receipt(tags);
@@ -96,12 +144,10 @@ module.exports = {
   formatCartCount: formatCartCount,
   getCartCounts: getCartCounts,
   loadAllItems:loadAllItems,
-  buildAllItems:buildAllItems
+  buildAllItems:buildAllItems,
+  promotionItems:promotionItems,
+  builtPromotedItems:builtPromotedItems
 };
 
 
-// return foodCounts.map(({id, count})=> {
-//   let found = _getElementById(allItems, id);
-//   return {id, name: found.name, count, price: found.price};
-//
-// });
+

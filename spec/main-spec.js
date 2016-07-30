@@ -1,5 +1,5 @@
 'use strict';
-let {formatCartCount,getCartCounts,loadAllItems,buildAllItems }=require('../main/main.js');
+let {formatCartCount,getCartCounts,loadAllItems,buildAllItems,promotionItems,builtPromotedItems}=require('../main/main.js');
 describe('pos', () => {
 
   it('should print cart counts',()=>{
@@ -70,6 +70,50 @@ describe('pos', () => {
         price: 4.5 } ];
     expect(getItems).toEqual(printItems);
   });
+
+  it('should print cart items',()=>{
+    const inputs=[ { barcode: 'ITEM000001',
+      name: '雪碧',
+      count: 5,
+      unit: '瓶',
+      price: 3 },
+      { barcode: 'ITEM000003',
+        name: '荔枝',
+        count: 2.5,
+        unit: '斤',
+        price: 15 },
+      { barcode: 'ITEM000005',
+        name: '方便面',
+        count: 3,
+        unit: '袋',
+        price: 4.5 } ];
+    let promotionItem=promotionItems();
+    let getItems=builtPromotedItems(inputs,promotionItem);
+    let printItems=[ { barcode: 'ITEM000001',
+      name: '雪碧',
+      count: 5,
+      unit: '瓶',
+      price: 3,
+      payPrices: 12,
+      savePrices: 3 },
+      { barcode: 'ITEM000003',
+        name: '荔枝',
+        count: 2.5,
+        unit: '斤',
+        price: 15,
+        payPrices: 37.5,
+        savePrices: 0 },
+      { barcode: 'ITEM000005',
+        name: '方便面',
+        count: 3,
+        unit: '袋',
+        price: 4.5,
+        payPrices: 13.5,
+        savePrices: 0 } ];
+    expect(getItems).toEqual(printItems);
+  });
+
+
 
 
 
