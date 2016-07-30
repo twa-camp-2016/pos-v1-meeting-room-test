@@ -104,7 +104,12 @@ function getTotalPrices(promotionItems) {
     return result;
   }, {totalPayPrice: 0, totalSaved: 0});
 }
-
+function getPrintModel(promotionItems, totalPrices) {
+  return {
+    receiptItems: promotionItems.map(({name, unit, count, price, payPrice}) => {
+      return {name, unit, count, price, payPrice}}),
+    totalPrices
+}
 function printReceipt(tags) {
   let formattedTags = getFormattedTags(tags);
   let countBarcodes = getCount(formattedTags);
@@ -113,7 +118,17 @@ function printReceipt(tags) {
   let promotions = loadPromotions();
   let promotionItems = getPayPrice(promotions, cartItems);
   let totalPrices = getTotalPrices(promotionItems);
-  return totalPrices;
+  let receiptModel = getPrintModel(promotionItems, totalPrices);
+  return receiptModel;
 }
 console.log(printReceipt(tags));
-module.exports = {getFormattedTags, getCount, loadAllItems, getCartItems, loadPromotions, getPayPrice, getTotalPrices}
+module.exports = {
+  getFormattedTags,
+  getCount,
+  loadAllItems,
+  getCartItems,
+  loadPromotions,
+  getPayPrice,
+  getTotalPrices,
+  getPrintModel,
+}
