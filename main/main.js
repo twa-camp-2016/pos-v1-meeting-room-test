@@ -21,6 +21,25 @@ function formatTags(tags) {
     .value();
 }
 
-module.exports = {
-  formatTags: formatTags
+function countItmes(formattedTags) {
+  let result = [];
+
+  formattedTags.map(formattedTag => {
+    let item = result.find(n => result.length > 0 && formattedTag.barcode === n.barcode);
+
+    if (item) {
+      item.count += formattedTag.count;
+    }
+    else {
+      result.push(formattedTag);
+    }
+  });
+
+  return result;
 }
+
+module.exports = {
+  formatTags: formatTags,
+  countItmes: countItmes
+}
+

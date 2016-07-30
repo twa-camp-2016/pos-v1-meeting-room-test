@@ -3,12 +3,13 @@
 
 let {
   formatTags,
+  countItmes,
 }
   = require('../main/main');
 
 describe('pos', () => {
 
-  it('should formatTags', () =>{
+  it('should formatTags', () => {
     const tags = [
       'ITEM000001',
       'ITEM000001',
@@ -52,12 +53,69 @@ describe('pos', () => {
         count: 1
       },
       {
-        barcode:'ITEM000005',
+        barcode: 'ITEM000005',
         count: 2
       }
     ];
 
     expect(formattedTags).toEqual(expected);
+  });
+
+  it('should countItems', () => {
+    const formattedTags = [
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      }
+    ];
+
+    let countedItems = countItmes(formattedTags);
+
+    const expected = [
+      {
+        barcode: 'ITEM000001',
+        count: 5
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 3
+      }
+    ];
+
+    expect(countedItems).toEqual(expected);
+
   });
 
 //   it('should print text', () => {
@@ -88,4 +146,4 @@ describe('pos', () => {
 //
 //     expect(console.log).toHaveBeenCalledWith(expectText);
 //   });
-});
+  });
