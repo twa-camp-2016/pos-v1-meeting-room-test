@@ -72,6 +72,16 @@ function buildPromotionItems(cartItems,promotions){
      }
    });
 }
+
+function calculateTotalPrice(promotedItems){
+ return  promotedItems.reduce((result,item)=>{
+
+   result.totalPayPrice+=item.payPrice;
+   result.totalSaved+=item.saved;
+   return result;
+ },{totalPayPrice:0, totalSaved:0});
+
+}
 module.exports = {
   getFormatTags:getFormatTags,
   getCountedItems:getCountedItems,

@@ -283,7 +283,7 @@ it('should build promoted items',()=>{
       }
     ];
     let result=calculateTotalPrice(input);
-    let expected={ totalPayPrice: 74, totalSaved: 4.5 };
+    let expected={ totalPayPrice:58.50, totalSaved:7.50};
     expect(result).toEqual(expected)
   });
 
