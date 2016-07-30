@@ -53,9 +53,20 @@ function buildPromotedItems(cartItems,promotions) {
   });
 }
 
+function calculateTotalPrice(promotedItems) {
+  let totalPayPrice = _.sumBy(promotedItems,function (promotedItem) {
+    return promotedItem.payPrice;
+  });
+  let totalSaved = _.sumBy(promotedItems,function (promotedItem) {
+    return promotedItem.saved;
+  });
+  return {totalPayPrice,totalSaved};
+}
+
 module.exports = {
   formatTags: formatTags,
   countBarcodes: countBarcodes,
   buildCartItems: buildCartItems,
-  buildPromotedItems: buildPromotedItems
+  buildPromotedItems: buildPromotedItems,
+  calculateTotalPrice: calculateTotalPrice
 };
