@@ -56,6 +56,13 @@ function buildPromotedItems(cartItems,promotions) {
 
   })
 }
+function calculateTotalPrices(promotedItems) {
+  return promotedItems.reduce((result,{payPrice,saved})=>{
+    result.totalPayPrice+=payPrice;
+    result.totalSavd+=saved;
+    return result;
+  },{totalPayPrice:0,totalSavd:0})
+}
 function printReceipt(tags) {
   let formattedTags=getFormattedTags(tags);
   // console.log(formattedTags);
@@ -66,7 +73,9 @@ function printReceipt(tags) {
   // console.log(cartItems);
   let promotions=loadPromotions();
   let promotedItems=buildPromotedItems(cartItems,promotions);
-  console.log(promotedItems);
+  // console.log(promotedItems);
+  let totalPrices=calculateTotalPrices(promotedItems);
+  // console.log(totalPrices);
 }
 let tags = [
   'ITEM000001',
@@ -143,5 +152,6 @@ module.exports = {
   loadAllItems:loadAllItems,
   buildCartItems:buildCartItems,
   loadPromotions:loadPromotions,
-  buildPromotedItems:buildPromotedItems
+  buildPromotedItems:buildPromotedItems,
+  calculateTotalPrices:calculateTotalPrices
 }

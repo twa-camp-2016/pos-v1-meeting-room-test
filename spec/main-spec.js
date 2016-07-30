@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags,getCountedItems,loadAllItems,buildCartItems,loadPromotions,buildPromotedItems}=require('../main/main.js');
+let {getFormattedTags,getCountedItems,loadAllItems,buildCartItems,loadPromotions,buildPromotedItems,calculateTotalPrices}=require('../main/main.js');
 describe('pos', () => {
 
   it('should format tags', () => {
@@ -140,6 +140,43 @@ describe('pos', () => {
     ];
 
     expect(promotedItems).toEqual(expectText);
+  });
+  it('should calculate total prices', () => {
+
+    let promotedItems=[
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:6,
+        payPrice:12,
+        saved:6
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:3.5,
+        payPrice:52.5,
+        saved:0
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:2,
+        payPrice:9,
+        saved:0
+      }
+    ];
+    let totalPrices=calculateTotalPrices(promotedItems);
+
+    const expectText ={ totalPayPrice: 73.5, totalSavd: 6 };
+
+    expect(totalPrices).toEqual(expectText);
   });
 //   it('should print text', () => {
 //
