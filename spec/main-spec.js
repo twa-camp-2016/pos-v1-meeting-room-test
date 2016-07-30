@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedItems,printReceipt} = require('../main/main');
+let {getFormattedItems,getCountBarcodes, printReceipt} = require('../main/main');
 describe('pos', () => {
   it('getFormattedItems', () => {
     let tags = [
@@ -11,8 +11,29 @@ describe('pos', () => {
     ];
     let formattedItems = getFormattedItems(tags);
     let expected = [
-      
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
     ]
+    expect(formattedItems).toEqual(expected);
+  });
+  it('getCountBarcode', () => {
+    let formattedItems =[
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
+    ];
+    let countBarcodes = getCountBarcodes(formattedItems);
+    let expected = [
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3},
+    ]
+    expect(countBarcodes).toEqual(expected);
   })
 
   it('should print text', () => {
