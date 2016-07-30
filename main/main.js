@@ -27,9 +27,31 @@ function getFormattedTags(tags) {
   }).value();
 }
 
+function getExistByBarcode(array, barcode) {
+  for (let countItem of array) {
+    if (countItem.barcode == barcode) {
+      return countItem;
+    }
+  }
+  return null;
+}
 
-getFormattedTags(tags)
+function getCountBarcodes(formattedTags) {
+  let result = [];
+  _.map(formattedTags, x=> {
+    let countItem = getExistByBarcode(result, x.barcode);
+    if (countItem === null) {
+      result.push({barcode: x.barcode, count: x.count});
+    } else {
+      countItem.count += x.count;
+    }
+  });
+  return result;
+}
+let formattedTags = getFormattedTags(tags);
+getCountBarcodes(formattedTags);
 
 module.exports = {
-  getFormattedTags: getFormattedTags
+  getFormattedTags: getFormattedTags,
+  getCountBarcodes: getCountBarcodes
 }
