@@ -6,7 +6,8 @@ let {
   buildCartItems,
   buildPromotedItems,
   calculateTotalPrice,
-  buildReceipt
+  buildReceipt,
+  buildReceiptString
 } = require("../main/main.js");
 let {loadAllItems, loadPromotions} = require("../spec/fixtures");
 
@@ -131,9 +132,9 @@ describe('pos', () => {
       'ITEM000005-2',
     ];
 
-    spyOn(console, 'log');
+    // spyOn(console, 'log');
 
-    printReceipt(tags);
+    let receiptString = printReceipt(tags);
 
     const expectText = `***<没钱赚商店>收据***
 名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
@@ -144,6 +145,7 @@ describe('pos', () => {
 节省：7.50(元)
 **********************`;
 
-    expect(console.log).toHaveBeenCalledWith(expectText);
+    // expect(console.log).toHaveBeenCalledWith(expectText);
+    expect(receiptString).toEqual(expectText);
   });
 });
