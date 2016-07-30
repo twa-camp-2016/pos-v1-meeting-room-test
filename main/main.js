@@ -1,5 +1,8 @@
 'use strict';
-
+let {
+  loadAllItems,
+  loadPromotions
+} = require('../spec/fixtures');
 function getFormatedTags(tags) {
   return tags.map((tag)=> {
     let found = tag.includes('-');
@@ -98,6 +101,19 @@ function buildReceiptSting({items, totalPrice, totalSaved}) {
   return lines.join('\n');
 }
 
+function printReceipt(tags) {
+  let formatedTags = getFormatedTags(tags);
+  let countTags = getCountTags(formatedTags);
+  let allItems = loadAllItems();
+  let cartItems = getCartItems(allItems,countTags);
+  let promotions = loadPromotions();
+  let promotionItems = getPromotionItems(promotions,cartItems);
+  let totalPrice = calulateTotalPrice(promotionItems);
+  let receipt = buildReceipt(promotionItems,totalPrice);
+  let receiptString = buildReceipt(receipt);
+  return receiptString;
+}
+
 module.exports = {
   getFormatedTags: getFormatedTags,
   getCountTags: getCountTags,
@@ -105,6 +121,7 @@ module.exports = {
   getPromotionItems: getPromotionItems,
   calulateTotalPrice: calulateTotalPrice,
   buildReceipt: buildReceipt,
-  buildReceiptSting
+  buildReceiptSting,
+  printReceipt
 }
 

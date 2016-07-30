@@ -6,7 +6,8 @@ let {
   getPromotionItems,
   calulateTotalPrice,
   buildReceipt,
-  buildReceiptSting
+  buildReceiptSting,
+  printReceipt
 } = require('../main/main');
 
 let {
