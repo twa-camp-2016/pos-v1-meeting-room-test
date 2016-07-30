@@ -1,6 +1,34 @@
 'use strict';
-
+let {
+  printReceipt,
+  formatedItem,
+} = require("../main/main.js");
 describe('pos', () => {
+  it('#1', () => {
+    const tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+    let formattedItems = formatedItem(tags);
+
+    let expected = [{barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}];
+
+    expect(formattedItems).toEqual(expected);
+  });
+
 
   it('should print text', () => {
 
