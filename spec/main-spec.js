@@ -1,23 +1,61 @@
 'use strict';
-let {getFormatedTags} = require('../main/main');
+let {
+  getFormatedTags,
+  getCountTags
+} = require('../main/main');
 
-describe('pos unit',()=>{
-  it('getFormatedTags',()=>{
+describe('pos unit', ()=> {
+  it('getFormatedTags', ()=> {
     let tags = [
       'ITEM000003-2.5',
       'ITEM000005',
       'ITEM000005-2'
     ];
-    let formatedTags =[
-      {barcode:'ITEM000003',count:2.5},
-      {barcode:'ITEM000005',count:1},
-      {barcode:'ITEM000005',count:2}
+    let formatedTags = [
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
     ];
     let result = getFormatedTags(tags);
     expect(formatedTags).toEqual(result);
   });
-})
 
+  it('getCountTags', ()=> {
+    let formatedTags = [
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000001', count: 2}
+    ];
+
+    let countTags = [
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3},
+      {barcode: 'ITEM000001', count: 2}
+    ];
+    let result = getCountTags(formatedTags);
+    expect(countTags).toEqual(result);
+  });
+
+  it('get', ()=> {
+    let formatedTags = [
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000001', count: 2}
+    ];
+
+    let countTags = [
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 3},
+      {barcode: 'ITEM000001', count: 2}
+    ];
+    let result = getCountTags(formatedTags);
+    expect(countTags).toEqual(result);
+  });
+});
 
 
 describe('pos', () => {
