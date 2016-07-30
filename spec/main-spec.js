@@ -1,6 +1,6 @@
 'use strict';
 let {getFormattedTags, getCountBarcodes, buildCartItems, loadAllItems,
-  loadPromotions, buildPromotedItems, calculateTotalPrices, buildReceipt}=require('../main/main.js');
+  loadPromotions, buildPromotedItems, calculateTotalPrices, buildReceipt, buildReceiptString}=require('../main/main.js');
 
 describe('pos', () => {
   fit('should get formatted tags', () => {
@@ -117,7 +117,32 @@ describe('pos', () => {
       totalPayPrice: 58.5,
       totalSaved: 7.5
     };
+    expect(result).toEqual(expected);
+  });
 
+  fit("should buildReceipt", () => {
+    const receiptModel = {
+      promotedItems: [
+        { name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
+        { name: '荔枝', unit: '斤', price: 15, count: 2.5, payPrice: 37.50, saved: 0.00  },
+        { name: '方便面', unit: '袋', price: 4.5, count: 3, payPrice: 9.00, saved: 4.50  } ],
+      savedItems: [
+        { name: '雪碧', count: 5, unit: '瓶' },
+        { name: '方便面', count: 3, unit: '袋' }],
+      totalPayPrice: 58.5,
+      totalSaved: 7.50
+    };
+
+    let result = buildReceiptString(receiptModel);
+
+    const expected = `***<没钱赚商店>收据***
+名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
+名称：荔枝，数量：2.5斤，单价：15.00(元)，小计：37.50(元)
+名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)
+----------------------
+总计：58.50(元)
+节省：7.50(元)
+**********************`;
     expect(result).toEqual(expected);
   });
 });
