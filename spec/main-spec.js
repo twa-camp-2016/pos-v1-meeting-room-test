@@ -1,6 +1,55 @@
 'use strict';
+let {buildFormattedBarcode}=require('../main/main');
 
 describe('pos', () => {
+
+  it('buildFormattedBarcode', function () {
+    let input =
+      [
+        'ITEM000001',
+        'ITEM000001',
+        'ITEM000001',
+        'ITEM000001',
+        'ITEM000001',
+        'ITEM000003-2',
+        'ITEM000005',
+        'ITEM000005',
+        'ITEM000005'
+      ];
+    let result = buildFormattedBarcode(input);
+    let expectItem = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+    ];
+    expect(result).toEqual(expectItem);
+  });
+  it('buildCountedBarcode',function(){
+    let input =[
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 1},
+    ];
+    let result=buildCountedBarcode(input);
+    let expectItem = [
+      {barcode: 'ITEM000001', count: 5},
+      {barcode: 'ITEM000003', count: 2},
+      {barcode: 'ITEM000005', count: 3},
+    ];
+    expect(result).toEqual(expectItem);
+  });
 
   it('should print text', () => {
 

@@ -1,7 +1,21 @@
+
+
 'use strict';
 
-//TODO: 请在该文件中实现练习要求并删除此注释
+function buildFormattedBarcode(input){
+  return input.map((item)=>{
+    if(item.includes('-')){
+      let found = item.split('-');
+      return {barcode:found[0], count:parseInt(found[1])}
+    }else{
+      return {barcode:item, count:1}
+    }
+  })
+}
+function buildCountedBarcode(input){
+  
+}
 
 module.exports = {
-  
+  buildFormattedBarcode
 }
