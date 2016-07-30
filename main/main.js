@@ -10,6 +10,8 @@ function printReceipt(tags) {
   let promotions = loadPromotions();
   let promotedItems = buildPromotedItems(cartItems, promotions);
 
+  let totalPrices = calculateTotalPrice(promotedItems);
+
 
 }
 function formatedItem(tags) {
@@ -56,11 +58,21 @@ function buildPromotedItems(cartItems, promotions) {
   });
 }
 
+function calculateTotalPrice(promotedItems) {
+  return _.reduce(promotedItems, (result, {payPrice, saved}) => {
+    result.totalPrice += payPrice;
+    result.totalSaved += saved;
+    return result;
+  }, {totalPrice: 0, totalSaved: 0});
+}
+
+
 module.exports = {
   printReceipt: printReceipt,
   formatedItem: formatedItem,
   countBarcode: countBarcode,
   buildCartItems: buildCartItems,
   buildPromotedItems: buildPromotedItems,
+  calculateTotalPrice: calculateTotalPrice
 
 }
