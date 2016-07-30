@@ -68,8 +68,8 @@ function calculateTotalPrice(promotedItems) {
 }
 function buildReceipt(promotedItems,{totalPrice,totalSaved}) {
       return{
-           promotedItems:promotedItems.map(({name,unit,price,count,payPrice,saved}) =>{
-             return {name,unit,price,count,payPrice,saved}
+           promotedItems:promotedItems.map(({barcode,name,unit,price,count,payPrice,saved}) =>{
+             return {barcode,name,unit,price,count,payPrice,saved}
            }),
            totalPrice,totalSaved
       }
