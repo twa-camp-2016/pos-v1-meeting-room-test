@@ -1,5 +1,5 @@
 'use strict';
-let {formatCartCount,getCartCounts }=require('../main/main.js');
+let {formatCartCount,getCartCounts,loadAllItems,buildAllItems }=require('../main/main.js');
 describe('pos', () => {
 
   it('should print cart counts',()=>{
@@ -28,7 +28,7 @@ describe('pos', () => {
     expect(getCartCounts).toEqual(printCartCounts);
   });
 
-  it('should print cart counts',()=>{
+  it('should print cart sumCounts',()=>{
     const inputs=[
       {barcode:'ITEM000001',count:1},
       {barcode:'ITEM000001',count:1},
@@ -44,6 +44,31 @@ describe('pos', () => {
       { barcode: 'ITEM000003', count: 2.5 },
       { barcode: 'ITEM000005', count: 3 } ];
     expect(getCounts).toEqual(printCounts);
+  });
+
+
+  it('should print cart items',()=>{
+    const inputs=[ { barcode: 'ITEM000001', count: 5 },
+      { barcode: 'ITEM000003', count: 2.5 },
+      { barcode: 'ITEM000005', count: 3 } ];
+    let allItems=loadAllItems();
+    let getItems=buildAllItems(inputs,allItems);
+    let printItems=[ { barcode: 'ITEM000001',
+      name: '方便面',
+      count: 5,
+      unit: '袋',
+      price: 4.5 },
+      { barcode: 'ITEM000003',
+        name: '荔枝',
+        count: 2.5,
+        unit: '斤',
+        price: 15 },
+      { barcode: 'ITEM000005',
+        name: '荔枝',
+        count: 3,
+        unit: '斤',
+        price: 15 } ];
+    expect(getItems).toEqual(printItems);
   });
 
 
