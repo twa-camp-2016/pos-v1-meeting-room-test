@@ -1,8 +1,7 @@
 'use strict';
 let{getFormatTags,
-   getCountedItems
-
-
+   getCountedItems,
+   buildCartItems
 }=require('../main/main');
 describe('pos', () => {
   it('it should format tags', ()=> {
@@ -104,6 +103,87 @@ describe('pos', () => {
     let result=getCountedItems(input);
     expect(result).toEqual(expected)
   });
+ it('should build Cart Items',()=>{
+   let input=[
+     {
+       barcode: 'ITEM000001',
+       count:5
+     },
+     {
+       barcode: 'ITEM000003',
+       count: 2.5
+     },
+     {
+       barcode: 'ITEM000005',
+       count: 3
+     },
+   ];
+    let allItems=[
+      {
+        barcode: 'ITEM000000',
+        name: '可口可乐',
+        unit: '瓶',
+        price: 3.00
+      },
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00
+      },
+      {
+        barcode: 'ITEM000002',
+        name: '苹果',
+        unit: '斤',
+        price: 5.50
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00
+      },
+      {
+        barcode: 'ITEM000004',
+        name: '电池',
+        unit: '个',
+        price: 2.00
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50
+      }
+    ];
+    let expected=[
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:3
+      }
+    ];
+    let result=buildCartItems(input,allItems);
+      expect(result).toEqual(expected)
+  });
+
+
 
   it('should print text', () => {
 

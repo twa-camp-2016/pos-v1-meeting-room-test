@@ -35,7 +35,23 @@ function  getCountedItems(formattedTags){
   return result;
 }
 
+function buildCartItems(getCountedItems,allItems){
+  return getCountedItems.map((countedItem)=>{
+    let found=getExistItemsByArray(countedItem.barcode,allItems);
+    if(found){
+      return{
+        barcode:found.barcode,
+        name: found.name,
+        unit: found.unit,
+        price: found.price,
+        count:countedItem.count
+      }
+    }
+  });
+}
+
 module.exports = {
   getFormatTags:getFormatTags,
-  getCountedItems:getCountedItems
+  getCountedItems:getCountedItems,
+  buildCartItems:buildCartItems
 };
