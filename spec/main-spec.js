@@ -1,6 +1,53 @@
 'use strict';
-
+let{getFormatTags}=require('../main/main');
 describe('pos', () => {
+  it('it should format tags', ()=> {
+    const input = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+    let expected = [
+      {
+        barcode: 'ITEM000001',
+        count:1
+      },
+      {
+        barcode: 'ITEM000001',
+        count:1
+      },
+      {
+        barcode: 'ITEM000001',
+        count:1
+      },
+      {
+        barcode: 'ITEM000001',
+        count:1
+      }, {
+        barcode: 'ITEM000001',
+        count:1
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      }
+    ];
+    let result = getFormatTags(input);
+    expect(result).toEqual(result)
+  });
 
   it('should print text', () => {
 
