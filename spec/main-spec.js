@@ -1,5 +1,5 @@
 'use strict';
-let {formattedTags} =require("../main/main.js");
+let {formattedTags, countedBarcodes} =require("../main/main.js");
 
 describe('pos', () => {
   fit('#1should formattedTags', () => {
@@ -25,8 +25,32 @@ describe('pos', () => {
     ];
     expect(formattedTags).toHaveBeenCalledWith(expectText);
   });
+});
+
+describe('pos', () => {
+  fit('#CcountedBarcodes', () => {
+    let formattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
+    ];
+    let countedBarcodes = countedBarcodes(formattedTags);
+    let expectText = [
+      {barcode: 'ITEM000001', count: 4},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}
+    ];
+    expect(countedBarcodes).toHaveBeenCalledWith(expectText);
+  });
+});
 
 
+describe('pos', () => {
   it('should print text', () => {
 
     const tags = [
