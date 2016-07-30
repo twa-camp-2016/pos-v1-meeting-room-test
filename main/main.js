@@ -148,6 +148,9 @@ function builtReceipt(builtedPromtedItems,calculateItems) {
 function builtNotes(buildReceipt){
   let lines=['***<没钱赚商店>收据***'];
   for(let item of buildReceipt.promotedItems)
+  {
+    lines.push(`名称：${item.name}，数量：${item.count}${item.unit}，单价：${item.price}(元)小计：${item.payPrices}`)
+  }
 
 }
 
