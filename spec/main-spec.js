@@ -1,5 +1,5 @@
 'use strict';
-let {getFormattedTags}=require('../main/main');
+let {getFormattedTags,getCount}=require('../main/main');
 describe('pos', () => {
   it('getFormattedTags', function () {
     let tags = ['ITEM000001', 'ITEM000001', 'ITEM000003-2.5'];
@@ -10,7 +10,23 @@ describe('pos', () => {
       {barcode: 'ITEM000003', count: 2.5}]
     expect(formattedTags).toEqual(expected);
   });
-  
+  it('getCount',function () {
+    let formattedTags = [
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5}];
+    let countBarcodes = getCount(formattedTags);
+    let expected =[
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2.5}];
+    expect(countBarcodes).toEqual(expected);
+  });
+  it('getCartItems',function () {
+    let countBarcodes = [
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2.5}];
+    let cartItems = getCartItems()
+  });
 // it('should print text', () => {
 //
 //   const tags = [
