@@ -47,9 +47,18 @@ function buildPromotionItems(cartItems,promotions){
   })
 }
 
+function buildTotalItems(promotionItems){
+  return promotionItems.reduce((result,{saved,payPrice})=>{
+    result.totalSaved +=saved;
+    result.totalPrice +=payPrice;
+    return result;
+  },{totalSaved:0,totalPrice:0})
+}
+
 module.exports = {
   buildFormattedBarcode,
   buildCountedBarcode,
   buildCartBarcode,
-  buildPromotionItems
+  buildPromotionItems,
+  buildTotalItems
 }
