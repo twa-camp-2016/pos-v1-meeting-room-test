@@ -1,6 +1,36 @@
-'use strict';
+let {formatTags} = require('../main/main.js');
+let {loadAllItems, loadPromotions} = require('../spec/fixtures.js');
+
 
 describe('pos', () => {
+  it('formatTags', function () {
+    let tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005-2'];
+    let expected = [
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000001',
+        count: 1
+      },
+      {
+        barcode: 'ITEM000003',
+        count: 2.5
+      },
+      {
+        barcode: 'ITEM000005',
+        count: 2
+      },
+    ];
+    let formattedTags = formatTags(tags);
+    expect(formattedTags).toEqual(expected);
+
+  });
 
   it('should print text', () => {
 
