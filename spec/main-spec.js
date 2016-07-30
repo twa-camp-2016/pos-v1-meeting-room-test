@@ -3,7 +3,8 @@ let {
   printReceipt,
   getCartItems,
   getReceiptItems,
-  getTotalItems
+  getTotalItems,
+  getReceipt
 } = require('../main/main');
 
 let {
@@ -136,21 +137,21 @@ describe('pos', () => {
         save: 3.00
       },
       {
-        cartItem:{
+        cartItem: {
 
-        item: {
-          barcode: 'ITEM000003',
-          name: '荔枝',
-          unit: '斤',
-          price: 15.00
+          item: {
+            barcode: 'ITEM000003',
+            name: '荔枝',
+            unit: '斤',
+            price: 15.00
+          },
+          count: 2.5
         },
-        count: 2.5
-        },
-        subtotal:37.50,
-        save:0
+        subtotal: 37.50,
+        save: 0
       },
       {
-        cartItem:{
+        cartItem: {
           item: {
             barcode: 'ITEM000005',
             name: '方便面',
@@ -159,14 +160,14 @@ describe('pos', () => {
           },
           count: 3
         },
-        subtotal:9.00,
-        save:4.5
+        subtotal: 9.00,
+        save: 4.5
       }
     ];
     expect(receiptItems).toEqual(expectText);
   });
 
-  it('获得总计和节省',() => {
+  it('获得总计和节省', () => {
     const receiptItems = [
       {
         cartItem: {
@@ -182,7 +183,7 @@ describe('pos', () => {
         save: 3.00
       },
       {
-        cartItem:{
+        cartItem: {
 
           item: {
             barcode: 'ITEM000003',
@@ -192,11 +193,11 @@ describe('pos', () => {
           },
           count: 2.5
         },
-        subtotal:37.50,
-        save:0
+        subtotal: 37.50,
+        save: 0
       },
       {
-        cartItem:{
+        cartItem: {
           item: {
             barcode: 'ITEM000005',
             name: '方便面',
@@ -205,15 +206,70 @@ describe('pos', () => {
           },
           count: 3
         },
-        subtotal:9.00,
-        save:4.5
+        subtotal: 9.00,
+        save: 4.5
       }
     ];
     const totalSaves = getTotalItems(receiptItems);
 
-    const expectText = {total:58.50,saves:7.50};
+    const expectText = {total: 58.50, saves: 7.50};
     expect(totalSaves).toEqual(expectText);
   });
 
-  it('获得小票',())
+  it('获得小票', () => {
+    const totalSaves = {total: 58.50, saves: 7.50};
+    const receiptItems = [
+      {
+        cartItem: {
+          item: {
+            barcode: 'ITEM000001',
+            name: '雪碧',
+            unit: '瓶',
+            price: 3.00
+          },
+          count: 5
+        },
+        subtotal: 12.00,
+        save: 3.00
+      },
+      {
+        cartItem: {
+
+          item: {
+            barcode: 'ITEM000003',
+            name: '荔枝',
+            unit: '斤',
+            price: 15.00
+          },
+          count: 2.5
+        },
+        subtotal: 37.50,
+        save: 0
+      },
+      {
+        cartItem: {
+          item: {
+            barcode: 'ITEM000005',
+            name: '方便面',
+            unit: '袋',
+            price: 4.50
+          },
+          count: 3
+        },
+        subtotal: 9.00,
+        save: 4.5
+      }
+    ];
+    const receipt = getReceipt(totalSaves,receiptItems);
+
+    const expectText  = `***<没钱赚商店>收据***
+名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
+名称：荔枝，数量：2.5斤，单价：15.00(元)，小计：37.50(元)
+名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)
+----------------------
+总计：58.50(元)
+节省：7.50(元)
+**********************`;
+    expect(receipt).toEqual(expectText);
+  });
 });

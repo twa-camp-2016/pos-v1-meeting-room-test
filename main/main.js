@@ -11,6 +11,8 @@ function printReceipt(tags) {
   const allPromotions = loadPromotions();
   const receiptItems = getReceiptItems(cartItems, allPromotions);
   const totalSaves = getTotalItems(receiptItems);
+  const receipt = getReceipt(totalSaves,receiptItems);
+  console.log(receipt);
 }
 
 function getCartItems(tags, allItems) {
@@ -70,9 +72,27 @@ function getTotalItems(receiptItems) {
   }
   return {total,saves};
 }
+
+function getReceipt(totalSaves,receiptItems) {
+  let items = receiptItems.map(receiptItem => {
+    return `名称：${receiptItem.cartItem.item.name}，\
+数量：${receiptItem.cartItem.count}${receiptItem.cartItem.item.unit}，\
+单价：${receiptItem.cartItem.item.price.toFixed(2)}(元)，\
+小计：${receiptItem.subtotal.toFixed(2)}(元)`
+  }).join('\n');
+
+  return `***<没钱赚商店>收据***
+${items}
+----------------------
+总计：${totalSaves.total.toFixed(2)}(元)
+节省：${totalSaves.saves.toFixed(2)}(元)
+**********************`;
+}
+
 module.exports = {
   printReceipt,
   getCartItems,
   getReceiptItems,
-  getTotalItems
+  getTotalItems,
+  getReceipt
 };
