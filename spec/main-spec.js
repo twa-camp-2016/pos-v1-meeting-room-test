@@ -118,7 +118,7 @@ describe('pos', () => {
     expect( cartItems).toEqual(expected);
   })
 
-  fit('get promoted carts information' ,() => {
+  it('get promoted carts information' ,() => {
     const cartItems = [{
       barcode: 'ITEM000001',
       name: '雪碧',
@@ -142,6 +142,7 @@ describe('pos', () => {
       unit: '瓶',
       price: 3.00,
       count:1,
+      payPrice:3.00,
       saved:0
     },{
       barcode: 'ITEM000005',
@@ -149,8 +150,39 @@ describe('pos', () => {
       unit: '袋',
       price: 4.50,
       count:3,
+      payPrice:9,
       saved:4.50
     }];
     expect(promotedCartInfo).toEqual(expected);
   })
+
+  fit('get totalPrice' ,() => {
+    var promotedCartInfo = [ {
+      barcode: 'ITEM000001',
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00,
+      count:1,
+      payPrice:3.00,
+      saved:0
+    },{
+      barcode: 'ITEM000005',
+      name: '方便面',
+      unit: '袋',
+      price: 4.50,
+      count:3,
+      payPrice:9,
+      saved:4.50
+    }];
+
+    let totalPrices = main.calculateTotalPrice(promotedCartInfo);
+
+    let expected = {
+      totalPayPrice : 12,
+      totalSaved : 4.50
+    }
+    expect(totalPrices).toEqual(expected);
+  })
 });
+
+

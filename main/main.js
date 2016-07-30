@@ -66,16 +66,27 @@ function getPromotedCartInfo(cartItems,promotions) {
       unit:cartItem.unit,
       price:cartItem.price,
       count:cartItem.count,
+      payPrice:cartItem.count * cartItem.price - saved,
       saved:saved
     }
   })
-
 }
+
+function calculateTotalPrice(promotedCartsInfo) {
+  return promotedCartsInfo.reduce((result,promotedCartInfo) => {
+     result.totalPayPrice += promotedCartInfo.payPrice;
+     result.totalSaved += promotedCartInfo.saved;
+    return result;
+  },{totalPayPrice:0,totalSaved:0})
+}
+
+
 
 module.exports = {
   getFormatedTags,
   countBarcodes,
   buildCartItems,
-  getPromotedCartInfo
+  getPromotedCartInfo,
+  calculateTotalPrice
 }
 
