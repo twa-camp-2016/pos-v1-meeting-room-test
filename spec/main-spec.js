@@ -1,8 +1,46 @@
 'use strict';
-
+let {getTags,getCountedTags}=require("../main/main.js");
 describe('pos', () => {
+it(("getTags"),()=>{
+  const tags = [
+    'ITEM000001',
+    'ITEM000001',
+    'ITEM000001',
+    'ITEM000001',
+    'ITEM000001',
+    'ITEM000003-2.5',
+    'ITEM000005',
+    'ITEM000005-2',
+  ];
+  let tagsItems=getTags(tags);
+  const  expectText=[ { barcode: 'ITEM000001', count: 1 },
+    { barcode: 'ITEM000001', count: 1 },
+    { barcode: 'ITEM000001', count: 1 },
+    { barcode: 'ITEM000001', count: 1 },
+    { barcode: 'ITEM000001', count: 1 },
+    { barcode: 'ITEM000003', count: 2.5 },
+    { barcode: 'ITEM000005', count: 1 },
+    { barcode: 'ITEM000005', count: 2 } ];
+  expect(tagsItems).toEqual(expectText);
+});
+  it(("getCountedTags"),()=>{
+    let formatTags=[ { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000001', count: 1 },
+      { barcode: 'ITEM000003', count: 2.5 },
+      { barcode: 'ITEM000005', count: 1 },
+      { barcode: 'ITEM000005', count: 2 } ];
+    let countedTags=getCountedTags(formatTags);
+    const  expectText=[ { barcode: 'ITEM000001', count: 5 },
+      { barcode: 'ITEM000003', count: 2.5 },
+      { barcode: 'ITEM000005', count: 3 } ];
+    expect(countedTags).toEqual(expectText);
 
-  it('should print text', () => {
+    }
+  );
+  xit('should print text', () => {
 
     const tags = [
       'ITEM000001',
