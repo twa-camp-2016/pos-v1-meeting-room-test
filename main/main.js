@@ -106,11 +106,11 @@ function buildReceiptString(receipt) {
   let lines = [];
   lines.push('***<没钱赚商店>收据***');
   receipt.promotedItems.map(item =>{
-    lines.push(`名称：${item.name}，数量：${item.count}${item.unit}，单价：${item.price}(元)，小计：${item.totalPayPrice}(元)`);
+    lines.push(`名称：${item.name}，数量：${item.count}${item.unit}，单价：${parseFloat(item.price).toFixed(2)}(元)，小计：${parseFloat(item.totalPayPrice).toFixed(2)}(元)`);
   });
   lines.push('----------------------');
-  lines.push(`总计：${receipt.totalPayPrices}(元)`);
-  lines.push(`节省：${receipt.totalSaveds}(元)`);
+  lines.push(`总计：${parseFloat(receipt.totalPayPrices).toFixed(2)}(元)`);
+  lines.push(`节省：${parseFloat(receipt.totalSaveds).toFixed(2)}(元)`);
   lines.push('**********************');
 
   return lines.join('\n');
