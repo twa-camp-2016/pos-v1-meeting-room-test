@@ -2,6 +2,7 @@
 let {
   printReceipt,
   formatedItem,
+  countBarcode
 } = require("../main/main.js");
 describe('pos', () => {
   it('#1', () => {
@@ -27,6 +28,23 @@ describe('pos', () => {
       {barcode: 'ITEM000005', count: 2}];
 
     expect(formattedItems).toEqual(expected);
+  });
+
+  it('#2', () => {
+    const formattedItems = [{barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000001', count: 1},
+      {barcode: 'ITEM000003', count: 2.5},
+      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000005', count: 2}];
+
+    let countedBarcodes = countBarcode(formattedItems);
+
+    let expected = [{barcode: 'ITEM000001', count: 5}, {barcode: 'ITEM000003', count: 2.5}, {barcode: 'ITEM000005', count: 3}];
+
+    expect(countedBarcodes).toEqual(expected);
   });
 
 
