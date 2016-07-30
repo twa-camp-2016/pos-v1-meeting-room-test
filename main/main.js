@@ -82,11 +82,28 @@ function calculateTotalPrice(promotedItems){
  },{totalPayPrice:0, totalSaved:0});
 
 }
+function buildReceipt(promotedItems,{totalPayPrice,totalSaved}){
+  let cartItems =promotedItems.map(promotedItem=>{
+    return{
+      name: promotedItem.name,
+      unit: promotedItem.unit,
+      price:promotedItem.price,
+      count:promotedItem.count,
+      payPrice:promotedItem.payPrice,
+    }
+  });
+  return{
+    cartItems,
+    totalPayPrice,
+    totalSaved
+  }
+}
 module.exports = {
   getFormatTags:getFormatTags,
   getCountedItems:getCountedItems,
   buildCartItems:buildCartItems,
   buildPromotionItems:buildPromotionItems,
-  calculateTotalPrice:calculateTotalPrice
+  calculateTotalPrice:calculateTotalPrice,
+  buildReceipt:buildReceipt
 
 };

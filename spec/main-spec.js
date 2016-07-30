@@ -3,7 +3,8 @@ let{getFormatTags,
    getCountedItems,
    buildCartItems,
   buildPromotionItems,
-  calculateTotalPrice
+  calculateTotalPrice,
+  buildReceipt
 }=require('../main/main');
 describe('pos', () => {
   it('it should format tags', ()=> {
@@ -283,10 +284,69 @@ it('should build promoted items',()=>{
       }
     ];
     let result=calculateTotalPrice(input);
-    let expected={ totalPayPrice:58.50, totalSaved:7.50};
+    let expected={totalPayPrice:58.50, totalSaved:7.50};
     expect(result).toEqual(expected)
   });
-
+  it('it should build receipt',()=>{
+    let input=[
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5,
+        payPrice:12.00,
+        saved:3.00
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5,
+        payPrice:37.50,
+        saved:0.00
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:3,
+        payPrice:9.00,
+        saved:4.50
+      }
+    ];
+    let expected={
+      cartItems: [
+      {
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5,
+        payPrice:12.00,
+      },
+      {
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count:2.5,
+        payPrice:37.50,
+      },
+      {
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count:3,
+        payPrice:9.00,
+      }
+    ],
+    totalPayPrice:58.50,
+      totalSaved:7.50
+    };
+    let result=buildReceipt(input,{totalPayPrice:58.50, totalSaved:7.50});
+     expect(result).toEqual(expected)
+  });
   it('should print text', () => {
 
     const tags = [
