@@ -1,5 +1,12 @@
 'use strict';
-let {buildFormattedBarcode,buildCountedBarcode,buildCartBarcode,buildPromotionItems,buildTotalItems}=require('../main/main');
+let {
+  buildFormattedBarcode,
+  buildCountedBarcode,
+  buildCartBarcode,
+  buildPromotionItems,
+  buildTotalItems,
+  buildReceipt,
+  printReceipt}=require('../main/main');
 let {loadAllItems,loadPromotions} = require('./fixtures');
 describe('pos', () => {
 
@@ -121,8 +128,8 @@ describe('pos', () => {
         unit: '瓶',
         price: 3.00,
         count:5,
-        saved: 6,
-        payPrice:9
+        save: 3,
+        payPrice:12
       },
       {
         barcode: 'ITEM000003',
@@ -130,7 +137,7 @@ describe('pos', () => {
         unit: '斤',
         price: 15.00,
         count: 2,
-        saved: 0,
+        save: 0,
         payPrice:30
       },
       {
@@ -139,7 +146,7 @@ describe('pos', () => {
         unit: '袋',
         price: 4.50,
         count :3,
-        saved: 4.5,
+        save: 4.5,
         payPrice:9
       }
     ];
@@ -148,6 +155,43 @@ describe('pos', () => {
 
 
   it('buildTotalItems',function(){
+    let input = [
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count:5,
+        save: 6,
+        payPrice:9
+      },
+      {
+        barcode: 'ITEM000003',
+        name: '荔枝',
+        unit: '斤',
+        price: 15.00,
+        count: 2,
+        save: 0,
+        payPrice:30
+      },
+      {
+        barcode: 'ITEM000005',
+        name: '方便面',
+        unit: '袋',
+        price: 4.50,
+        count :3,
+        save: 4.5,
+        payPrice:9
+      }
+    ];
+    let result=buildTotalItems(input);
+    let expectItem = {totalSaved:10.5,totalPrice:48};
+    expect(result).toEqual(expectItem);
+  });
+
+
+  it('buildReceipt',function(){
+    let total={totalSaved:10.5,totalPrice:48};
     let input = [
       {
         barcode: 'ITEM000001',
@@ -177,8 +221,37 @@ describe('pos', () => {
         payPrice:9
       }
     ];
-    let result=buildTotalItems(input);
-    let expectItem = {totalSaved:10.5,totalPrice:48};
+    let result=buildReceipt(input,total);
+    let expectItem ={
+      receiptItems:[
+        {
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00,
+          count:5,
+          saved: 6,
+          payPrice:9
+        },
+        {
+          name: '荔枝',
+          unit: '斤',
+          price: 15.00,
+          count: 2,
+          saved: 0,
+          payPrice:30
+        },
+        {
+          name: '方便面',
+          unit: '袋',
+          price: 4.50,
+          count :3,
+          saved: 4.5,
+          payPrice:9
+        }
+      ],
+      totalPrice:48,
+      totalSaved:10.5
+    };
     expect(result).toEqual(expectItem);
   });
 
