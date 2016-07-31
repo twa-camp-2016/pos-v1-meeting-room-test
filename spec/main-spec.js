@@ -6,8 +6,9 @@ let {
   buildPromotionItems,
   buildTotalItems,
   buildReceipt,
-  printReceipt}=require('../main/main');
-let {loadAllItems,loadPromotions} = require('./fixtures');
+  printReceipt
+}=require('../main/main');
+let {loadAllItems, loadPromotions} = require('./fixtures');
 
 describe('pos', () => {
 
@@ -25,13 +26,13 @@ describe('pos', () => {
     expect(result).toEqual(expectItem);
   });
 
-  it('buildCountedBarcode',function(){
-    let input =[
+  it('buildCountedBarcode', function () {
+    let input = [
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000003', count: 2},
     ];
-    let result=buildCountedBarcode(input);
+    let result = buildCountedBarcode(input);
     let expectItem = [
       {barcode: 'ITEM000001', count: 2},
       {barcode: 'ITEM000003', count: 2}
@@ -39,13 +40,13 @@ describe('pos', () => {
     expect(result).toEqual(expectItem);
   });
 
-  it('buildCartedBarcode',function(){
+  it('buildCartedBarcode', function () {
     let input = [
       {barcode: 'ITEM000003', count: 2},
       {barcode: 'ITEM000005', count: 3},
     ];
     let allItems = loadAllItems();
-    let result=buildCartBarcode(input,allItems);
+    let result = buildCartBarcode(input, allItems);
     let expectItem = [
       {
         barcode: 'ITEM000003',
@@ -59,22 +60,21 @@ describe('pos', () => {
         name: '方便面',
         unit: '袋',
         price: 4.50,
-        count :3
+        count: 3
       }
     ];
     expect(result).toEqual(expectItem);
   });
 
 
-
-  it('buildPromotionItems',function(){
+  it('buildPromotionItems', function () {
     let input = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:5
+        count: 5
       },
       {
         barcode: 'ITEM000003',
@@ -83,18 +83,18 @@ describe('pos', () => {
         price: 15.00,
         count: 2
       }
-      ]
+    ]
     let promotions = loadPromotions();
-    let result=buildPromotionItems(input,promotions);
+    let result = buildPromotionItems(input, promotions);
     let expectItem = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:5,
+        count: 5,
         save: 3,
-        payPrice:12
+        payPrice: 12
       },
       {
         barcode: 'ITEM000003',
@@ -103,23 +103,23 @@ describe('pos', () => {
         price: 15.00,
         count: 2,
         save: 0,
-        payPrice:30
+        payPrice: 30
       }
     ];
     expect(result).toEqual(expectItem);
   });
 
 
-  it('buildTotalItems',function(){
+  it('buildTotalItems', function () {
     let input = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:5,
+        count: 5,
         save: 6,
-        payPrice:9
+        payPrice: 9
       },
       {
         barcode: 'ITEM000003',
@@ -128,26 +128,26 @@ describe('pos', () => {
         price: 15.00,
         count: 2,
         save: 0,
-        payPrice:30
+        payPrice: 30
       }
     ];
-    let result=buildTotalItems(input);
-    let expectItem = {totalSaved:6,totalPrice:39};
+    let result = buildTotalItems(input);
+    let expectItem = {totalSaved: 6, totalPrice: 39};
     expect(result).toEqual(expectItem);
   });
 
 
-  it('buildReceipt',function(){
-    let total={totalSaved:6,totalPrice:39};
+  it('buildReceipt', function () {
+    let total = {totalSaved: 6, totalPrice: 39};
     let input = [
       {
         barcode: 'ITEM000001',
         name: '雪碧',
         unit: '瓶',
         price: 3.00,
-        count:5,
+        count: 5,
         saved: 6,
-        payPrice:9
+        payPrice: 9
       },
       {
         barcode: 'ITEM000003',
@@ -156,19 +156,19 @@ describe('pos', () => {
         price: 15.00,
         count: 2,
         saved: 0,
-        payPrice:30
+        payPrice: 30
       }
     ];
-    let result=buildReceipt(input,total);
-    let expectItem ={
-      receiptItems:[
+    let result = buildReceipt(input, total);
+    let expectItem = {
+      receiptItems: [
         {
           name: '雪碧',
           unit: '瓶',
           price: 3.00,
-          count:5,
+          count: 5,
           saved: 6,
-          payPrice:9
+          payPrice: 9
         },
         {
           name: '荔枝',
@@ -176,11 +176,11 @@ describe('pos', () => {
           price: 15.00,
           count: 2,
           saved: 0,
-          payPrice:30
+          payPrice: 30
         }
       ],
-      totalPrice:39,
-      totalSaved:6
+      totalPrice: 39,
+      totalSaved: 6
     };
     expect(result).toEqual(expectItem);
   });
