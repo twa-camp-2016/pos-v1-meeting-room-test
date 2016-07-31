@@ -8,32 +8,19 @@ let {
   buildReceipt,
   printReceipt}=require('../main/main');
 let {loadAllItems,loadPromotions} = require('./fixtures');
+
 describe('pos', () => {
 
   it('buildFormattedBarcode', function () {
     let input =
       [
         'ITEM000001',
-        'ITEM000001',
-        'ITEM000001',
-        'ITEM000001',
-        'ITEM000001',
-        'ITEM000003-2',
-        'ITEM000005',
-        'ITEM000005',
-        'ITEM000005'
+        'ITEM000003-2'
       ];
     let result = buildFormattedBarcode(input);
     let expectItem = [
       {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000003', count: 2},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
+      {barcode: 'ITEM000003', count: 2}
     ];
     expect(result).toEqual(expectItem);
   });
@@ -42,39 +29,24 @@ describe('pos', () => {
     let input =[
       {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
-      {barcode: 'ITEM000001', count: 1},
       {barcode: 'ITEM000003', count: 2},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
-      {barcode: 'ITEM000005', count: 1},
     ];
     let result=buildCountedBarcode(input);
     let expectItem = [
-      {barcode: 'ITEM000001', count: 5},
-      {barcode: 'ITEM000003', count: 2},
-      {barcode: 'ITEM000005', count: 3},
+      {barcode: 'ITEM000001', count: 2},
+      {barcode: 'ITEM000003', count: 2}
     ];
     expect(result).toEqual(expectItem);
   });
 
   it('buildCartedBarcode',function(){
     let input = [
-      {barcode: 'ITEM000001', count: 5},
       {barcode: 'ITEM000003', count: 2},
       {barcode: 'ITEM000005', count: 3},
     ];
     let allItems = loadAllItems();
     let result=buildCartBarcode(input,allItems);
     let expectItem = [
-      {
-        barcode: 'ITEM000001',
-        name: '雪碧',
-        unit: '瓶',
-        price: 3.00,
-        count:5
-      },
       {
         barcode: 'ITEM000003',
         name: '荔枝',
@@ -110,13 +82,6 @@ describe('pos', () => {
         unit: '斤',
         price: 15.00,
         count: 2
-      },
-      {
-        barcode: 'ITEM000005',
-        name: '方便面',
-        unit: '袋',
-        price: 4.50,
-        count :3
       }
       ]
     let promotions = loadPromotions();
@@ -139,15 +104,6 @@ describe('pos', () => {
         count: 2,
         save: 0,
         payPrice:30
-      },
-      {
-        barcode: 'ITEM000005',
-        name: '方便面',
-        unit: '袋',
-        price: 4.50,
-        count :3,
-        save: 4.5,
-        payPrice:9
       }
     ];
     expect(result).toEqual(expectItem);
@@ -173,25 +129,16 @@ describe('pos', () => {
         count: 2,
         save: 0,
         payPrice:30
-      },
-      {
-        barcode: 'ITEM000005',
-        name: '方便面',
-        unit: '袋',
-        price: 4.50,
-        count :3,
-        save: 4.5,
-        payPrice:9
       }
     ];
     let result=buildTotalItems(input);
-    let expectItem = {totalSaved:10.5,totalPrice:48};
+    let expectItem = {totalSaved:6,totalPrice:39};
     expect(result).toEqual(expectItem);
   });
 
 
   it('buildReceipt',function(){
-    let total={totalSaved:10.5,totalPrice:48};
+    let total={totalSaved:6,totalPrice:39};
     let input = [
       {
         barcode: 'ITEM000001',
@@ -210,15 +157,6 @@ describe('pos', () => {
         count: 2,
         saved: 0,
         payPrice:30
-      },
-      {
-        barcode: 'ITEM000005',
-        name: '方便面',
-        unit: '袋',
-        price: 4.50,
-        count :3,
-        saved: 4.5,
-        payPrice:9
       }
     ];
     let result=buildReceipt(input,total);
@@ -239,18 +177,10 @@ describe('pos', () => {
           count: 2,
           saved: 0,
           payPrice:30
-        },
-        {
-          name: '方便面',
-          unit: '袋',
-          price: 4.50,
-          count :3,
-          saved: 4.5,
-          payPrice:9
         }
       ],
-      totalPrice:48,
-      totalSaved:10.5
+      totalPrice:39,
+      totalSaved:6
     };
     expect(result).toEqual(expectItem);
   });
