@@ -1,5 +1,5 @@
 'use strict';
-let {formatCartCount,getCartCounts,loadAllItems,buildAllItems,promotionItems,builtPromotedItems,calculateTotalPrice,builtReceipt}=require('../main/main.js');
+let {formatCartCount,getCartCounts,loadAllItems,buildAllItems,loadPromotions,builtPromotedItems,calculateTotalPrice,builtReceipt,builtNotes,Receipt}=require('../main/main.js');
 describe('pos', () => {
 
   it('should print cart counts',()=>{
@@ -87,7 +87,7 @@ describe('pos', () => {
         count: 3,
         unit: '袋',
         price: 4.5 } ];
-    let promotionItem=promotionItems();
+    let promotionItem=loadPromotions();
     let getItems=builtPromotedItems(inputs,promotionItem);
     let printItems=[ { barcode: 'ITEM000001',
       name: '雪碧',
@@ -211,19 +211,19 @@ describe('pos', () => {
       'ITEM000005-2',
     ];
 
-    spyOn(console, 'log');
+    //spyOn(console, 'log');
 
-    printReceipt(tags);
+    let builtNote=Receipt(tags);
 
     const expectText = `***<没钱赚商店>收据***
-名称：雪碧，数量：5瓶，单价：3.00，(元)小计：12.00(元)
+名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
 名称：荔枝，数量：2.5斤，单价：15.00(元)，小计：37.50(元)
-名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)
+名称：方便面，数量：3袋，单价：4.50(元)，小计：13.50(元)
 ----------------------
-总计：58.50(元)
-节省：7.50(元)
+总计：63.00(元)
+节省：3.00(元)
 **********************`;
-
-    expect(console.log).toHaveBeenCalledWith(expectText);
+require(`fs`).writeFileSync('2.txt',expectText);
+    expect(builtNote).toEqual(expectText);
   });
 });
