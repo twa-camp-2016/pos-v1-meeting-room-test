@@ -1,9 +1,9 @@
 'use strict';
-let {getFormattedTags, getCountBarcodes, buildCartItems, loadAllItems,
-  loadPromotions, buildPromotedItems, calculateTotalPrices, buildReceipt, buildReceiptString}=require('../main/main.js');
-
+let {getFormattedTags, getCountBarcodes, buildCartItems, buildPromotedItems,
+  calculateTotalPrices, buildReceipt, buildReceiptString, receipt}=require('../main/main.js');
+let {loadAllItems, loadPromotions} = require('../spec/fixtures.js');
 describe('pos', () => {
-  fit('should get formatted tags', () => {
+  it('should get formatted tags', () => {
     const tags = [
       'ITEM000001',
       'ITEM000001',
@@ -29,7 +29,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should countedBarcodes", () => {
+  it("should countedBarcodes", () => {
     const formattedTags = [
       { barcode: 'ITEM000001', count: 1 },
       { barcode: 'ITEM000001', count: 1 },
@@ -50,7 +50,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should buildCartItems", () => {
+  it("should buildCartItems", () => {
     const countedBarcodes = [
       {barcode: 'ITEM000001', count: 5},
       {barcode: 'ITEM000003', count: 2.5},
@@ -67,7 +67,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should buildPromotedItems", () => {
+  it("should buildPromotedItems", () => {
     const cartItems = [
       { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5 },
       { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5 },
@@ -84,7 +84,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should calculateTotalPrices", () => {
+  it("should calculateTotalPrices", () => {
     const promotedItems = [
       { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
       { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5, payPrice: 37.50, saved: 0.00  },
@@ -97,7 +97,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should buildReceipt", () => {
+  it("should buildReceipt", () => {
     const promotedItems = [
       { barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
       { barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15, count: 2.5, payPrice: 37.50, saved: 0.00  },
@@ -120,7 +120,7 @@ describe('pos', () => {
     expect(result).toEqual(expected);
   });
 
-  fit("should buildReceipt", () => {
+  it("should buildReceipt", () => {
     const receiptModel = {
       promotedItems: [
         { name: '雪碧', unit: '瓶', price: 3, count: 5, payPrice: 12.00, saved: 3.00 },
@@ -148,9 +148,7 @@ describe('pos', () => {
 });
 
 describe('pos', () => {
-
   it('should print text', () => {
-
     const tags = [
       'ITEM000001',
       'ITEM000001',
@@ -163,8 +161,7 @@ describe('pos', () => {
     ];
 
     spyOn(console, 'log');
-
-    printReceipt(tags);
+    receipt(tags);
 
     const expectText = `***<没钱赚商店>收据***
 名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)
@@ -174,7 +171,7 @@ describe('pos', () => {
 总计：58.50(元)
 节省：7.50(元)
 **********************`;
-
+    //require(`fs`).writeFileSync('2.txt', expectText);
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 });
