@@ -1,5 +1,4 @@
 'use strict';
-
 function loadAllItems() {
   return [
     {
@@ -52,4 +51,8 @@ function loadPromotions() {
       ]
     }
   ];
+}
+module.exports = {
+  loadAllItems:loadAllItems,
+  loadPromotions:loadPromotions
 }
