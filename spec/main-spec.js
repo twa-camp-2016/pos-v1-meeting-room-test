@@ -225,13 +225,13 @@ describe('pos', () => {
   it('should build receipt string', () => {
 
     let receipt={
-      promotedItem: [{name: '雪碧', unit: '瓶', price: 3.00, count: 6,payPrice:6.00},
-        {name: '荔枝', unit: '斤', price: 15.00, count: 3.5,payPrice:0},
-        {name: '方便面', unit: '袋', price: 4.50, count: 2,payPrice:0}],
+      promotedItem: [{name: '雪碧', unit: '瓶', price: 3.00, count: 6,payPrice:12.00},
+        {name: '荔枝', unit: '斤', price: 15.00, count: 3.5,payPrice:52.50},
+        {name: '方便面', unit: '袋', price: 4.50, count: 2,payPrice:9.00}],
       totalPayPrice: 73.50,
-      totalSavd: 6.00
+      totalSaved: 6.00
     };
-    
+
     let receiptString=buildReceiptString(receipt);
 
     const expectText =`***<没钱赚商店>收据***
@@ -241,8 +241,8 @@ describe('pos', () => {
 ----------------------
 总计：73.50(元)
 节省：6.00(元)
-**********************
-`;
+**********************`;
+    require(`fs`).writeFileSync('3.txt',expectText);
 
     expect(receiptString).toEqual(expectText);
   });
@@ -272,6 +272,7 @@ describe('pos', () => {
 节省：7.50(元)
 **********************`;
 
+    require(`fs`).writeFileSync('2.txt',expectText);
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 });
