@@ -1,104 +1,102 @@
 'use strict';
-let _ = require('lodash')
-function formatTags(tags){
-  return tags.map((tag)=>{
-    if(tag.includes('-')){
+let _ = require('lodash');
+let {loadAllItems, loadPromotions} = require('../spec/fixtures');
+
+function formatTags(tags) {
+  return _.map(tags, tag => {
+    if (tag.includes('-')) {
       let [barcode,count] = tag.split('-');
-      return {barcode,count:parseFloat(count)}
-    }else{
-      return {barcode:tag, count:1}
+      return {barcode, count: parseFloat(count)};
+    } else {
+      return {barcode: tag, count: 1};
     }
-  });
+  })
 }
-function _getExistentElementByBarcode(array,barcode){
-  return array.find( arr =>  arr.barcode === barcode );
+function _getExistElementByBarcodes(array, barcode) {
+  return _.find(array, item => item.barcode === barcode);
 }
-function countTags(formattedTags){
- return formattedTags.reduce((result,tag)=>{
-  let element = _getExistentElementByBarcode(result,tag.barcode);
-  if(element){
-    element.count += tag .count;
-  }else{
-    result.push({barcode:tag.barcode,count:tag.count});
-  }
-  return result;
-},[])
+
+function countBarcodes(formattedTags) {
+  return _.reduce(formattedTags, (result, formattedTag)=> {
+    let found = _getExistElementByBarcodes(result, formattedTag.barcode);
+    if (found) {
+      found.count += formattedTag.count;
+    } else {
+      result.push({barcode: formattedTag.barcode, count: formattedTag.count});
+    }
+    return result;
+  }, [])
+
 }
-function getCartItems(countedBarcodes,allItems){
-  return countedBarcodes.map(({barcode,count})=>{
-    let {name,unit,price} = _getExistentElementByBarcode(allItems, barcode);
-    return {barcode,name,unit,price,count};
-  });
-}
-function _fixPrice(number){
-  return parseFloat(number.toFixed(2))
-}
-function getPromotionItems(cartItems,promotions){
-  let currentPromotion = promotions.find((promotion)=>promotion.type="BUY_TWO_GET_ONE_FREE")
-  return cartItems.map((cartItem)=>{
-    let haspromoted = currentPromotion.barcodes.includes(cartItem.barcode)&&cartItem.count>2;
-    let totalprice = cartItem.price*cartItem.count;
-    let saved = haspromoted?cartItem.price * cartItem.count/3:0;
-    let payprice = totalprice-saved;
-    return Object.assign({},cartItem,{
-      payprice,
-      saved:_fixPrice(saved)
-    })
+
+function getCartItems(countedBarcodes, allItems) {
+  return _.map(countedBarcodes, ({barcode, count})=> {
+    let {name, unit, price} = _getExistElementByBarcodes(allItems, barcode);
+    return {barcode, name, unit, price, count};
   })
 }
 
-function getTotalprice(promotedItems){
-  return promotedItems.reduce((result,{payprice,saved})=>{
-      result.totalpayprice += payprice;
-      result.totalsaved += saved;
-      return result;
-    },
-    {totalpayprice:0,totalsaved:0})
+function getPromotions(cartItems, promotions) {
+  let currentPromotion = promotions.find((promotion) => promotion.type === 'BUY_TWO_GET_ONE_FREE');
+  return cartItems.map(({price, count, barcode, name, unit})=> {
+    let hasPromoted = currentPromotion.barcodes.find(b => b === barcode);
+    let saved = hasPromoted ? price * Math.floor(count / 3) : 0;
+    let payPrice = price * count - saved;
+    return {barcode, name, unit, price, count, payPrice, saved};
+  })
 }
-function getReceipt(promotedItems, totalPrices){
+
+function getTotalPrices(promotedItems) {
   return {
-    receiptItems:promotedItems.map(({name,unit,price,count,payprice,saved})=>{
-      return {name,unit,price,count,payprice,saved}
+    totalPayPrice: _.sumBy(promotedItems, promotedItem => promotedItem.payPrice),
+    totalSaved: _.sumBy(promotedItems, promotedItem => promotedItem.saved)
+  };
+}
+
+function getReceipt(promotedItems, {totalPayPrice, totalSaved}) {
+  return {
+    receiptItems: promotedItems.map(({name, unit, price, count, payPrice, saved})=> {
+      return {name, unit, price, count, payPrice, saved};
     }),
-    totalpayprice:totalPrices.totalpayprice,
-    totalsaved:totalPrices.totalsaved
+    totalPayPrice,
+    totalSaved
   }
 }
-function getReceiptString(receipt){
-  let totalprice = receipt.totalpayprice;
-  let saved = receipt.totalsaved;
+
+function getReceiptString(receipt) {
+  let totalprice = receipt.totalPayPrice;
+  let saved = receipt.totalSaved;
   let receiptString = "";
   for(let receiptItem of receipt.receiptItems){
-    receiptString += `名称:${receiptItem.name},数量:${receiptItem.count},单价:${receiptItem.price.toFixed(2)}(元),小计:${receiptItem.payprice.toFixed(2)}(元)`;
+    receiptString += `名称:${receiptItem.name},数量:${receiptItem.count},单价:${receiptItem.price.toFixed(2)}(元),小计:${receiptItem.payPrice.toFixed(2)}(元)`;
     receiptString += "\n";
   }
-  console.log(receiptString)
   const result = `***<没钱赚商店>收据***
 ${receiptString}----------------------
 总计:${totalprice.toFixed(2)}(元)
 节省:${saved.toFixed(2)}(元)
-**********************`;
+**********************`.trim();
   return result;
 }
-function printReceipt(tags){
-  let allItems = loadAllItems();
+function printReceipt(tags) {
   let formattedTags = formatTags(tags);
-  let countedBarcodes = countTags(formattedTags);
-  let cartItems = getCartItems(countedBarcodes,allItems);
+  let countedBarcodes = countBarcodes(formattedTags);
+  let allItems = loadAllItems();
+  let cartItems = getCartItems(countedBarcodes, allItems);
   let promotions = loadPromotions();
-  let promotionItems = getPromotionItems(cartItems,promotions);
-  let totalprice = getTotalprice(promotionItems);
-  let receiptItems = getReceipt(promotionItems,totalprice);
-  let receiptString = printReceipt(receiptItems);
+  let promotedItems = getPromotions(cartItems, promotions);
+  let totalPrices = getTotalPrices(promotedItems);
+  let receipt = getReceipt(promotedItems, totalPrices);
+  let receiptString = getReceiptString(receipt);
   console.log(receiptString);
-
 }
 module.exports = {
-  formatTags:formatTags,
-  countTags:countTags,
-  getCartItems:getCartItems,
-  getPromotionItems:getPromotionItems,
-  getTotalprice:getTotalprice,
-  getReceipt:getReceipt,
-  getReceiptString:getReceiptString
-}
+  formatTags,
+  countBarcodes,
+  getCartItems,
+  getPromotions,
+  getTotalPrices,
+  getReceipt,
+  getReceiptString,
+  printReceipt
+};
